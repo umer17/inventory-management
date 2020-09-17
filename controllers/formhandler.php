@@ -24,7 +24,7 @@ catch(PDOException $e)
 
     function generatenew()
     {
-        print_r($_POST) ;
+        var_dump($_POST);
 //         global $conn;
 //         $customername=$_POST['customername'];
 // $accountid=$_POST['accountid'];

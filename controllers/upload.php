@@ -23,7 +23,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         if(in_array($filetype, $mimes)){
             // Check whether file exists before uploading it
            
-                move_uploaded_file($_FILES["excel"]["tmp_name"], "upload/" . "inventory.".$ext);
+                move_uploaded_file($_FILES["excel"]["tmp_name"], "../upload/" . "inventory.".$ext);
                 echo "Your file was uploaded successfully.";
             
         } else{

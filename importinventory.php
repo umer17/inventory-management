@@ -14,7 +14,7 @@
   <div class="container h-100">
     <div class="row h-100 justify-content-center align-items-center">
         <div class="col-10 col-md-8 col-lg-6">
-  <form class="text-center" action="upload.php" method="post" enctype="multipart/form-data">
+  <form class="text-center" action="controllers/upload.php" method="post" enctype="multipart/form-data">
         <h2 class="text-center mt-2">Import Inventory</h2>
         <!-- <label for="fileSelect">Filename:</label> -->
         <input class="mt-2" type="file" name="excel" id="fileSelect">
