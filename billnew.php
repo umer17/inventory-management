@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <!-- <link rel="stylesheet" href="styles/table.css"> -->
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.0/themes/smoothness/jquery-ui.css" />
+
     <title>Bill New Customer</title>
 </head>
 
@@ -34,7 +35,7 @@
                     </div>
                     <div class="form-group">
                         <label for="remainingbalance">Remaining Balance:</label>
-                        <input class="form-control remainingbalance" type="number" placeholder="Remaining Balance" name="remainingbalance">
+                        <input class="form-control remainingbalance" type="number" placeholder="Remaining Balance" onkeyup="setPreviousBalance()" name="remainingbalance">
 
                     </div>
                     <div class="form-group">
@@ -103,9 +104,13 @@
                                     <td>1</td>
                                     <td><input name="itemid[]" onkeyup="searchDescription(this)" class="itemids" required type="text"></td>
                                     <td><input name="description[]" onkeyup="searchId(this)" class="description" required type="text"></td>
-                                    <td><input name="quantity[]" required type="number"></td>
-                                    <td><input type="hidden" name="rate[]" required type="number"></td>
-                                    <td><input type="hidden" name="amount[]" required type="number"></td>
+                                    <td><input name="quantity[]" onkeyup="updateAmount(this)" required type="number"></td>
+                                    <td><input type="hidden" name="rate[]" required type="number">
+                                        <p class="text-center"></p>
+                                    </td>
+                                    <td><input type="hidden" name="amount[]" required type="number">
+                                        <p class="text-center"></p>
+                                    </td>
 
 
                                 </tr>
@@ -113,24 +118,38 @@
                                     <td>2</td>
                                     <td><input name="itemid[]" onkeyup="searchDescription(this)" class="itemids" type="text"></td>
                                     <td><input name="description[]" onkeyup="searchId(this)" class="description" type="text"></td>
-                                    <td><input name="quantity[]" type="number"></td>
-                                    <td><input type="hidden" name="rate[]" type="number"></td>
-                                    <td><input type="hidden" name="amount[]" type="number"></td>
+                                    <td><input name="quantity[]" onkeyup="updateAmount(this)" type="number"></td>
+                                    <td><input type="hidden" name="rate[]" type="number">
+                                        <p class="text-center"></p>
+                                    </td>
+                                    <td><input type="hidden" name="amount[]" type="number">
+                                        <p class="text-center"></p>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>3</td>
                                     <td><input name="itemid[]" onkeyup="searchDescription(this)" class="itemids" type="text"></td>
                                     <td><input name="description[]" onkeyup="searchId(this)" class="description" type="text"></td>
-                                    <td><input name="quantity[]" type="number"></td>
-                                    <td><input type="hidden" name="rate[]" type="number"></td>
-                                    <td><input type="hidden" name="amount[]" type="number"></td>
+                                    <td><input name="quantity[]" onkeyup="updateAmount(this)" type="number"></td>
+                                    <td><input type="hidden" name="rate[]" type="number">
+                                        <p class="text-center"></p>
+                                    </td>
+                                    <td><input type="hidden" name="amount[]" type="number">
+                                        <p class="text-center"></p>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
                         <div class="form-group float-right">
-                            <label class="d-block" id="total" for="total">Total: </label>
-                            <label class="d-block" id="previousbalance" for="previousbalance">Previous Balance: </label>
-                            <label class="d-block" id="grandtotal" for="grandtotal">Grand Total: </label>
+                            <label class="d-block" id="total" for="total">
+                                <p>Total: </p><input type="hidden" name="total" type="number">
+                            </label>
+                            <label class="d-block" id="previousbalance" for="previousbalance">
+                                <p>Previous Balance: </p><input type="hidden" name="previousbalance" type="number">
+                            </label>
+                            <label class="d-block" id="grandtotal" for="grandtotal">
+                                <p>Grand Total: </p><input type="hidden" name="grandtotal" type="number">
+                            </label>
                         </div>
                         <div class=" mt-n3">
                             <button type="button" class="btn btn-primary btn-customized" onclick="return addRow()">+</button>
@@ -139,10 +158,10 @@
 
 
 
-
+                    <input type="hidden" name="indexes[]" type="number">
                     <!-- TABLE END -->
                     <div class="text-center">
-                        <button type="submit" name="generatenew" class="btn btn-primary btn-customized text-center">Generate Bill</button>
+                        <button type="submit" name="generatenew" onclick="return setIndexes()" class="btn btn-primary btn-customized text-center">Generate Bill</button>
                         <!-- End input fields -->
                     </div>
 
@@ -168,7 +187,7 @@
 
         function addRow() {
             var tableRef = document.getElementById('bill-table').getElementsByTagName('tbody')[0];
-            $("#bill-table").find('tbody').append("<tr><td>" + (tableRef.rows.length + 1) + "</td><td><input class=\"itemids\" name=\"itemid[]\" onkeyup=\"searchDescription(this)\" type=\"text\"></td><td><input  onkeyup=\"searchId(this)\" name=\"description[]\" class=\"description\" type=\"text\"></td><td><input name=\"quantity[]\" type=\"number\"></td> <td><input type=\"hidden\" name=\"rate[]\" type=\"number\"></td><td><input type=\"hidden\" name=\"amount[]\" type=\"number\"></td></tr>");
+            $("#bill-table").find('tbody').append("<tr><td>" + (tableRef.rows.length + 1) + "</td><td><input class=\"itemids\" name=\"itemid[]\" onkeyup=\"searchDescription(this)\" type=\"text\"></td><td><input  onkeyup=\"searchId(this)\" name=\"description[]\" class=\"description\" type=\"text\"></td><td><input name=\"quantity[]\" onkeyup=\"updateAmount(this)\" type=\"number\"></td> <td><input type=\"hidden\" name=\"rate[]\" type=\"number\"><p class=\"text-center\"></p></td><td><input type=\"hidden\" name=\"amount[]\" type=\"number\"><p class=\"text-center\"></p></td></tr>");
 
         }
 
@@ -231,13 +250,21 @@
     <!-- <script src="//code.jquery.com/jquery-1.10.2.js"></script> -->
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="controllers/auto.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+
+
     <script>
         MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
         var data;
         var itemid;
         var description;
+
+        function addItem() {
+            console.log("item added");
+        }
 
         function searchDescription(element, value) {
 
@@ -262,10 +289,23 @@
             }
             if (descriptionIndex != undefined) {
                 element.parentElement.nextElementSibling.childNodes[0].value = data[1][descriptionIndex];
-                element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.childNodes[0].value = data[2][descriptionIndex];
-                element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.innerHTML = data[2][descriptionIndex];
+                element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.childNodes[0].value = data[3][descriptionIndex];
+                console.log(element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.childNodes);
+                element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = data[3][descriptionIndex];
+
+            } else {
+
+                element.parentElement.nextElementSibling.childNodes[0].value = "";
+                element.parentElement.nextElementSibling.nextElementSibling.childNodes[0].value = "";
+                element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.childNodes[0].value = "";
+                element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = "";
+                element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.childNodes[0].value = "";
+                element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = "";
+
             }
         }
+
+
 
         function searchId(element, value) {
 
@@ -288,10 +328,101 @@
                 }
             }
             if (idIndex != undefined) {
+
                 element.parentElement.previousElementSibling.childNodes[0].value = data[0][idIndex];
-                element.parentElement.nextElementSibling.nextElementSibling.childNodes[0].value = data[2][idIndex];
-                element.parentElement.nextElementSibling.nextElementSibling.innerHTML = data[2][idIndex];
+                element.parentElement.nextElementSibling.nextElementSibling.childNodes[0].value = data[3][idIndex];
+                element.parentElement.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = data[3][idIndex];
+            } else {
+                element.parentElement.previousElementSibling.childNodes[0].value = "";
+                element.parentElement.nextElementSibling.childNodes[0].value = "";
+                element.parentElement.nextElementSibling.nextElementSibling.childNodes[0].value = "";
+                element.parentElement.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = "";
+                element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.childNodes[0].value = "";
+                element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = "";
             }
+        }
+
+        function updateAmount(element) {
+            value = element.parentElement.previousElementSibling.previousElementSibling.childNodes[0].value;
+
+            let idIndex;
+            for (var i = 0; i < data[0].length; i++) {
+
+                if (value == data[0][i])
+
+                {
+                    idIndex = i;
+                    break;
+                }
+
+            }
+            allowed_quantity = data[2][idIndex];
+            if (element.value > allowed_quantity) {
+                element.value = allowed_quantity;
+            } else {
+                let rate = element.parentElement.nextElementSibling.childNodes[0].value;
+                let amount = rate * element.value;
+
+                if (amount != 0) {
+
+                    // console.log( element.parentElement.nextElementSibling.nextElementSibling.childNodes()[0].value=amount);
+                    element.parentElement.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = amount;
+                    element.parentElement.nextElementSibling.nextElementSibling.childNodes[0].value = amount
+                    calculateTotal();
+                } else {
+                    element.parentElement.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = "";
+                    element.parentElement.nextElementSibling.nextElementSibling.childNodes[0].value = "";
+                    //Set Total To Zero
+                    calculateTotal()
+
+                }
+            }
+        }
+
+        function calculateTotal() {
+            values = document.getElementsByName("amount[]");
+            total = 0;
+            for (var i = 0; i < values.length; i++) {
+                total += Number(values[i].value);
+            }
+            document.getElementById("total").getElementsByTagName("p")[0].innerHTML = "Total: " + Number(total);
+            document.getElementsByName("total")[0].value = total;
+            document.getElementById("grandtotal").getElementsByTagName("p")[0].innerHTML = "Grand Total: " + (Number(total) + Number(document.getElementsByName("remainingbalance")[0].value));
+            document.getElementsByName("grandtotal")[0].value = Number(total) + Number(document.getElementsByName("remainingbalance")[0].value);
+
+        }
+
+        function setPreviousBalance() {
+            document.getElementById("previousbalance").getElementsByTagName("p")[0].innerHTML = "Previous Balance: " + document.getElementsByName("remainingbalance")[0].value;
+        }
+
+        function setIndexes() {
+            let indexes = [];
+            var input = document.getElementsByName('itemid[]');
+            let idIndex;
+            for (var i = 0; i < input.length; i++) {
+
+
+                for (var j = 0; j < data[0].length; j++) {
+                    if (input[i].value != undefined) {
+                        if (input[i].value == data[0][j])
+
+                        {
+                            idIndex = j;
+                            indexes.push(idIndex);
+                            break;
+
+                        }
+                    }
+                }
+
+            }
+            $('input:hidden[name=\'indexes[]\']').val(indexes);
+
+
+            return true;
+
+
         }
         var observer = new MutationObserver(function(mutations, observer) {
             // fired when a mutation occurs
@@ -341,11 +472,27 @@
                     });
                     $(".description").autocomplete({
                         source: data[1],
+                        html: true,
+                        response: function(event, ui) {
+
+                            // ui.content is the array that's about to be sent to the response callback.
+                            if (ui.content.length === 0) {
+                                var noResult = {
+                                    value: "",
+                                    label: "<button type=\"button\" class=\"btn btn-light btn-sm\" onclick=\"addItem()\" >Item not found, click to add</button>"
+                                };
+                                ui.content.push(noResult);
+
+                            } else {
+                                $("#empty-message").empty();
+                            }
+                        },
                         select: function(value, data) {
                             searchId(value.target, data.item.value);
                         }
                     });
                 },
+
             });
 
         });

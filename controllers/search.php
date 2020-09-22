@@ -14,12 +14,12 @@ if ($xlsx = SimpleXLSX::parse('../upload/inventory.xlsx')) {
         } else {
             array_push($itemid, strval($elt[0]));
             array_push($description, strval($elt[1]));
-            // array_push($quantity, $elt[2]);
+            array_push($quantity, $elt[2]);
             array_push($rate, strval($elt[3]));
         }
         $i++;
     }
-    array_push($data,$itemid,$description,$rate);
+    array_push($data,$itemid,$description,$quantity,$rate);
     echo json_encode($data);
 } else {
     echo SimpleXLSX::parseError();
