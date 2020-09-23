@@ -16,6 +16,122 @@
 </head>
 
 <body class="h-100">
+    <!-- Modal Start-->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Item</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="form-example table-responsive" onsubmit="func()" method="post">
+                        <div class="form-group">
+                            <label for="itemid1">Item ID:</label>
+                            <input name="itemid" class="form-control" id="itemid1" placeholder="Item ID" required type="text">
+                        </div>
+                        <div class="form-group">
+                            <label for="description1">Descritpion:</label>
+
+                            <input name="description" class="form-control" id="description1" onkeyup="generateID(this)" placeholder="Description" required type="text">
+                        </div>
+                        <div class="form-group">
+                            <label for="quantity1">Quantity:</label>
+                            <input name="quantity" class="form-control" id="quantity1" placeholder="Quantity" required type="number">
+                        </div>
+                        <div class="form-group">
+                            <label for="rate1">Rate:</label>
+                            <input name="rate" class="form-control" id="rate1" placeholder="Rate" required type="number">
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Add Item</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECOND MODAL -->
+
+    <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Success</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-center">Item Added Successfully</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary text-center" data-dismiss="modal">Ok</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- SECOND MODAL END-->
+    <script>
+        function generateID(element) {
+
+            let values = element.value.split(' ');
+            let finalString = "";
+            console.log(values);
+            // if(Array.isArray(values) && values.length && values[0]!="") {
+            values.forEach((item) => {
+                finalString += item.substring(0, 1).toUpperCase();
+                // element.parentElement.previousElementSibling.childNodes[0].value = item.substring(0,1);
+            });
+
+            document.getElementById("itemid1").value = finalString + makeid(3);
+            // }
+        }
+
+        function makeid(length) {
+            var result = '';
+            var characters = '0123456789';
+            var charactersLength = characters.length;
+            for (var i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+            return result;
+        }
+
+        function func() {
+            event.preventDefault();
+            var itemid = $('#itemid1').val();
+            var description = $('#description1').val();
+            var quantity = $('#quantity1').val();
+            var rate = $('#rate1').val();
+            $.ajax({
+                type: 'POST',
+                url: 'controllers/formhandler.php',
+                data: {
+                    addsingleitem: 'addsingleitem',
+                    itemid: itemid,
+                    description: description,
+                    quantity: quantity,
+                    rate: rate,
+                },
+                datatype: 'JSON',
+                success: function(data) {
+                    console.log(data)
+
+                },
+                error: function(error) {
+                    console.log(error)
+                },
+            });
+            $('#exampleModal').modal('toggle');
+            $('#confirmModal').modal('toggle');
+        }
+    </script>
+    <!-- Modal End -->
 
     <div class="container h-100">
         <div class="row h-100 justify-content-center align-items-center">
@@ -145,7 +261,7 @@
                                 <p>Total: </p><input type="hidden" name="total" type="number">
                             </label>
                             <label class="d-block" id="previousbalance" for="previousbalance">
-                                <p>Previous Balance: </p><input type="hidden" name="previousbalance" type="number">
+                                <p>Previous Balance: </p><input type="hidden" name="previousbalance"  type="number">
                             </label>
                             <label class="d-block" id="grandtotal" for="grandtotal">
                                 <p>Grand Total: </p><input type="hidden" name="grandtotal" type="number">
@@ -262,9 +378,7 @@
         var itemid;
         var description;
 
-        function addItem() {
-            console.log("item added");
-        }
+
 
         function searchDescription(element, value) {
 
@@ -394,6 +508,7 @@
 
         function setPreviousBalance() {
             document.getElementById("previousbalance").getElementsByTagName("p")[0].innerHTML = "Previous Balance: " + document.getElementsByName("remainingbalance")[0].value;
+            
         }
 
         function setIndexes() {
@@ -424,7 +539,18 @@
 
 
         }
-        var observer = new MutationObserver(function(mutations, observer) {
+       
+        $(document).ready(function() {
+
+            $.ajax({
+                type: 'get',
+                url: 'controllers/search.php',
+                dataType: 'json',
+                cache: false,
+                success: function(result) {
+                    data = result;
+                    //MUTATION START
+                    var observer = new MutationObserver(function(mutations, observer) {
             // fired when a mutation occurs
 
             try {
@@ -455,17 +581,24 @@
             subtree: true
             //...
         });
-        $(document).ready(function() {
-
-            $.ajax({
-                type: 'get',
-                url: 'controllers/search.php',
-                dataType: 'json',
-                cache: false,
-                success: function(result) {
-                    data = result;
+                    //MUTATION  END
                     $(".itemids").autocomplete({
                         source: data[0],
+                        html: true,
+                        response: function(event, ui) {
+
+                            // ui.content is the array that's about to be sent to the response callback.
+                            if (ui.content.length === 0) {
+                                var noResult = {
+                                    value: "",
+                                    label: "<button type=\"button\" class=\"btn btn-light btn-sm\" data-toggle=\"modal\" data-target=\"#exampleModal\" >Item not found, click to add</button>"
+                                };
+                                ui.content.push(noResult);
+
+                            } else {
+                                $("#empty-message").empty();
+                            }
+                        },
                         select: function(value, data) {
                             searchDescription(value.target, data.item.value);
                         }
@@ -479,7 +612,7 @@
                             if (ui.content.length === 0) {
                                 var noResult = {
                                     value: "",
-                                    label: "<button type=\"button\" class=\"btn btn-light btn-sm\" onclick=\"addItem()\" >Item not found, click to add</button>"
+                                    label: "<button type=\"button\" class=\"btn btn-light btn-sm\" data-toggle=\"modal\" data-target=\"#exampleModal\" >Item not found, click to add</button>"
                                 };
                                 ui.content.push(noResult);
 

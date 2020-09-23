@@ -31,3 +31,4 @@ table.table-fit tbody td, table.table-fit tfoot td {
 * html .ui-autocomplete {
   height: 100px;
 }
+tr.clickable-row { cursor: pointer; }
