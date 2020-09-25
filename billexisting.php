@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.0/themes/smoothness/jquery-ui.css" />
 
 
+
   <title>Bill Existing Customer</title>
 </head>
 
@@ -264,6 +265,10 @@
               <label class="d-block" id="grandtotal" for="grandtotal">
                 <p>Grand Total: </p><input type="hidden" name="grandtotal" type="number">
               </label>
+              <div class="form-inline mt-2">
+                <label for="amountpaid">Amount Paid: </label>
+                <input required class="form-control ml-2 mb-2" id="amountpaid" type="number" name="amountpaid">
+              </div>
             </div>
             <div class=" mt-n3">
               <button type="button" class="btn btn-primary btn-customized" onclick="return addRow()">+</button>
@@ -362,6 +367,7 @@
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   <script src="controllers/auto.js"></script>
+
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
   <script>
@@ -592,6 +598,21 @@
 
               $(".itemids").autocomplete({
                 source: data[0],
+                html: true,
+                response: function(event, ui) {
+
+                  // ui.content is the array that's about to be sent to the response callback.
+                  if (ui.content.length === 0) {
+                    var noResult = {
+                      value: "",
+                      label: "<button type=\"button\" class=\"btn btn-light btn-sm\" data-toggle=\"modal\" data-target=\"#exampleModal\" >Item not found, click to add</button>"
+                    };
+                    ui.content.push(noResult);
+
+                  } else {
+                    $("#empty-message").empty();
+                  }
+                },
                 select: function(value, data) {
                   // console.log(value.target,data.item.value);
                   searchDescription(value.target, data.item.value);
@@ -600,6 +621,21 @@
 
               $(".description").autocomplete({
                 source: data[1],
+                html: true,
+                response: function(event, ui) {
+
+                  // ui.content is the array that's about to be sent to the response callback.
+                  if (ui.content.length === 0) {
+                    var noResult = {
+                      value: "",
+                      label: "<button type=\"button\" class=\"btn btn-light btn-sm\" data-toggle=\"modal\" data-target=\"#exampleModal\" >Item not found, click to add</button>"
+                    };
+                    ui.content.push(noResult);
+
+                  } else {
+                    $("#empty-message").empty();
+                  }
+                },
                 select: function(value, data) {
                   searchId(value.target, data.item.value);
                 }

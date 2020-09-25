@@ -32,3 +32,11 @@ table.table-fit tbody td, table.table-fit tfoot td {
   height: 100px;
 }
 tr.clickable-row { cursor: pointer; }
+@media print {
+  .pagebreak {
+      clear: both;
+      page-break-after: always;
+  }
+}
+.sticky 
+{ position: fixed; bottom: 5px; right: 5px; }

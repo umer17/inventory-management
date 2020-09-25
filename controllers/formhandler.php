@@ -1,4 +1,5 @@
 <?php
+
 require '../vendor/autoload.php';
 date_default_timezone_set("Asia/Karachi");
 
@@ -15,7 +16,6 @@ $conn = null;
 try {
     $conn = new PDO("mysql:host=$servername;port=3308;dbname=rizwan", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
     if (isset($_POST['generatenew'])) {
         generatenew();
     } else if (isset($_POST['additems'])) {
@@ -24,11 +24,16 @@ try {
         addsingleitem();
     } else if (isset($_POST['generateexisting'])) {
         generateexisting();
+    } else if (isset($_POST['editexcel'])) {
+        editexcel();
+    } else if (isset($_POST['addvendor'])) {
+        addvendor();
+    } else if (isset($_POST['addtransaction'])) {
+        addtransaction();
     }
 } catch (PDOException $e) {
     echo "Connection failed: " . $e->getMessage();
 }
-
 function generatenew()
 {
     var_dump($_POST);
@@ -70,6 +75,12 @@ function generatenew()
     $remainingbalance = $_POST['remainingbalance'];
     echo "Remaining Balance: " . $remainingbalance;
     echo "<br>";
+    $amountpaid = $_POST['amountpaid'];
+    echo "Amount Paid: " . $amountpaid;
+    echo "<br>";
+    $receivername = $_POST['receivername'];
+    echo "Receiver Name: " . $receivername;
+    echo "<br>";
     // var_dump($_POST);
     $spreadsheet = PhpOffice\PhpSpreadsheet\IOFactory::load("../upload/inventory.xlsx");
     $sheet = $spreadsheet->getActiveSheet();
@@ -83,45 +94,27 @@ function generatenew()
         $new_quantity = $quantity - $_POST["quantity"][$i];
         $sheet->setCellValue("C" . ($indexes[$i] + 2), $new_quantity);
     }
-
-
-
     // //load spreadsheet
     // $spreadsheet = PhpOffice\PhpSpreadsheet\IOFactory::load("../upload/inventory.xlsx"); 
     // //change it
     // $sheet = $spreadsheet->getActiveSheet();
     // $sheet->setCellValue('A1', 'New Value');
-
     //write it again to Filesystem with the same name (=replace)
     $writer = new Xlsx($spreadsheet);
     $writer->save('yourspreadsheet.xlsx');
     global $conn;
-
-
-
     $stmt = $conn->prepare("INSERT INTO `customers` (`customername`, `accountid`, `remainingbalance`) VALUES (:customername, :accountid, :remainingbalance)");
-
     if ($stmt->execute([
         'customername' => $customername,
         'accountid' => $accountid,
-        'remainingbalance' => 0
-
-
+        'remainingbalance' => ($grandtotal - $amountpaid)
     ])) {
-        $message = "Customer Registered Successfully";
-        // echo "<script type='text/javascript'>alert('$message');
-        //     window.location.href='http://joblister/post_job.php';
-        //     </script>";
-        echo "<script type='text/javascript'>alert('$message');
-
-            </script>";
     } else {
         $message = "There was an error inserting data into customers table";
         echo "<script type='text/javascript'>alert('$message');
-
             </script>";
     }
-    $stmt = $conn->prepare("INSERT INTO `bills` (`invoicenumber`, `date`, `time`, `accountid`, `customername`, `transactiontype`, `transactionnumber`, `carton`, `bundle`, `totalcartonbundle`, `total`, `previousbalance`, `grandtotal`) VALUES (:invoicenumber, :date, :time, :accountid, :customername, :transactiontype, :transactionnumber, :carton, :bundle, :totalcartonbundle, :total, :remainingbalance, :grandtotal)");
+    $stmt = $conn->prepare("INSERT INTO `bills` (`invoicenumber`, `date`, `time`, `accountid`, `customername`, `transactiontype`, `transactionnumber`, `carton`, `bundle`, `totalcartonbundle`, `total`, `previousbalance`, `grandtotal`, `amountpaid`, `receivername`) VALUES (:invoicenumber, :date, :time, :accountid, :customername, :transactiontype, :transactionnumber, :carton, :bundle, :totalcartonbundle, :total, :remainingbalance, :grandtotal, :amountpaid, :receivername)");
     if ($stmt->execute([
         'invoicenumber' => $invoicenumber,
         'date' => $date,
@@ -136,18 +129,12 @@ function generatenew()
         'total' => $total,
         'remainingbalance' => $remainingbalance,
         'grandtotal' => $grandtotal,
+        'amountpaid' => $amountpaid,
+        'receivername' => $receivername,
     ])) {
-        $message = "Bill Inserted Successfully";
-        // echo "<script type='text/javascript'>alert('$message');
-        //     window.location.href='http://joblister/post_job.php';
-        //     </script>";
-        echo "<script type='text/javascript'>alert('$message');
-
-            </script>";
     } else {
         $message = "There was an error inserting data into bills table";
         echo "<script type='text/javascript'>alert('$message');
-
             </script>";
     }
     for ($i = 0; $i < $length; $i++) {
@@ -159,19 +146,13 @@ function generatenew()
             'quantity' => $_POST["quantity"][$i],
             'rate' => $_POST["rate"][$i],
             'amount' => $_POST["amount"][$i],
-
         ])) {
-            $message = "Item Added Successfully";
-            // echo "<script type='text/javascript'>alert('$message');
-            //     window.location.href='http://joblister/post_job.php';
-            //     </script>";
-            echo "<script type='text/javascript'>alert('$message');
-    
-                </script>";
+            if ($i == ($length - 1)) {
+                printPage($invoicenumber);
+            }
         } else {
             $message = "There was an error inserting data into items table";
             echo "<script type='text/javascript'>alert('$message');
-    
                 </script>";
         }
     }
@@ -215,7 +196,12 @@ function generateexisting()
     $grandtotal = $_POST['grandtotal'];
     echo "Grand Total: " . $grandtotal;
     echo "<br>";
-
+    $amountpaid = $_POST['amountpaid'];
+    echo "Amount Paid: " . $amountpaid;
+    echo "<br>";
+    $receivername = $_POST['receivername'];
+    echo "Receiver Name: " . $receivername;
+    echo "<br>";
     // var_dump($_POST);
     $spreadsheet = PhpOffice\PhpSpreadsheet\IOFactory::load("../upload/inventory.xlsx");
     $sheet = $spreadsheet->getActiveSheet();
@@ -229,39 +215,32 @@ function generateexisting()
         $new_quantity = $quantity - $_POST["quantity"][$i];
         $sheet->setCellValue("C" . ($indexes[$i] + 2), $new_quantity);
     }
-
-
-
     // //load spreadsheet
     // $spreadsheet = PhpOffice\PhpSpreadsheet\IOFactory::load("../upload/inventory.xlsx"); 
     // //change it
     // $sheet = $spreadsheet->getActiveSheet();
     // $sheet->setCellValue('A1', 'New Value');
-
     //write it again to Filesystem with the same name (=replace)
     $writer = new Xlsx($spreadsheet);
     $writer->save('yourspreadsheet.xlsx');
     global $conn;
-    $stmt = $conn->prepare("UPDATE `customers` SET `remainingbalance` = '0' WHERE `customers`.`accountid` = :accountid");
+    $stmt = $conn->prepare("UPDATE `customers` SET `remainingbalance` = :amountpaid WHERE `customers`.`accountid` = :accountid");
     if ($stmt->execute([
         'accountid' => $accountid,
+        'amountpaid' => ($grandtotal - $amountpaid)
     ])) {
         $message = "Update  Successfully";
         // echo "<script type='text/javascript'>alert('$message');
         //     window.location.href='http://joblister/post_job.php';
         //     </script>";
         echo "<script type='text/javascript'>alert('$message');
-    
                 </script>";
     } else {
         $message = "There was an error inserting data into bills table";
         echo "<script type='text/javascript'>alert('$message');
-    
                 </script>";
     }
-
-    $stmt = $conn->prepare("INSERT INTO `bills` (`invoicenumber`, `date`, `time`, `accountid`, `customername`, `transactiontype`, `transactionnumber`, `carton`, `bundle`, `totalcartonbundle`, `total`, `previousbalance`, `grandtotal`) VALUES (:invoicenumber, :date, :time, :accountid, :customername, :transactiontype, :transactionnumber, :carton, :bundle, :totalcartonbundle, :total, :previousbalance, :grandtotal)");
-
+    $stmt = $conn->prepare("INSERT INTO `bills` (`invoicenumber`, `date`, `time`, `accountid`, `customername`, `transactiontype`, `transactionnumber`, `carton`, `bundle`, `totalcartonbundle`, `total`, `previousbalance`, `grandtotal`, `amountpaid`, `receivername`) VALUES (:invoicenumber, :date, :time, :accountid, :customername, :transactiontype, :transactionnumber, :carton, :bundle, :totalcartonbundle, :total, :previousbalance, :grandtotal, :amountpaid, :receivername)");
     if ($stmt->execute([
         'invoicenumber' => $invoicenumber,
         'date' => $date,
@@ -276,18 +255,12 @@ function generateexisting()
         'total' => $total,
         'previousbalance' => $previousbalance,
         'grandtotal' => $grandtotal,
+        'amountpaid' => $amountpaid,
+        'receivername' => $receivername,
     ])) {
-        $message = "Bill Inserted Successfully";
-        // echo "<script type='text/javascript'>alert('$message');
-        //     window.location.href='http://joblister/post_job.php';
-        //     </script>";
-        echo "<script type='text/javascript'>alert('$message');
-
-            </script>";
     } else {
         $message = "There was an error inserting data into bills table";
         echo "<script type='text/javascript'>alert('$message');
-
             </script>";
     }
     for ($i = 0; $i < $length; $i++) {
@@ -299,19 +272,13 @@ function generateexisting()
             'quantity' => $_POST["quantity"][$i],
             'rate' => $_POST["rate"][$i],
             'amount' => $_POST["amount"][$i],
-
         ])) {
-            $message = "Item Added Successfully";
-            // echo "<script type='text/javascript'>alert('$message');
-            //     window.location.href='http://joblister/post_job.php';
-            //     </script>";
-            echo "<script type='text/javascript'>alert('$message');
-    
-                </script>";
+            if ($i == ($length - 1)) {
+                printPage($invoicenumber);
+            }
         } else {
             $message = "There was an error inserting data into items table";
             echo "<script type='text/javascript'>alert('$message');
-    
                 </script>";
         }
     }
@@ -356,16 +323,117 @@ function addsingleitem()
     $writer = new Xlsx($spreadsheet);
     $writer->save('yourspreadsheet.xlsx');
 }
-
 function getRandomString($length = 16)
 {
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $string = '';
-
     for ($i = 0; $i < $length; $i++) {
         $string .= $characters[mt_rand(0, strlen($characters) - 1)];
     }
-
     return $string;
+}
+function printPage($invoicenumber)
+{
+    echo '<script src="https://code.jquery.com/jquery-1.12.4.js"></script>';
+    echo '<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>';
+    echo "<script>
+    var payload = {
+        invoicenumber: '$invoicenumber',
+      };
+      var form = document.createElement('form');
+      form.style.visibility = 'hidden';
+      form.method = 'POST';
+      form.action = '../bill.php';
+      $.each(Object.keys(payload), function(index, key) {
+      var input = document.createElement('input');
+          input.name = key;
+          input.value = payload[key];
+          form.appendChild(input)
+      });
+      document.body.appendChild(form);
+      form.submit();       
+    </script>";
+}
+function editexcel()
+{
+    var_dump($_POST);
+    $indexes = $_POST['indexes'];
+    $itemid = $_POST["itemid"];
+    $description = $_POST["description"];
+    $quantity = $_POST["quantity"];
+    $rate = $_POST["rate"];
+    $spreadsheet = PhpOffice\PhpSpreadsheet\IOFactory::load("../upload/inventory.xlsx");
+    $sheet = $spreadsheet->getActiveSheet();
+    // $row = $sheet->getHighestRow() + 1;
+    // $sheet->insertNewRowBefore($row);
+    // $sheet->setCellValue('A' . $row, $_POST['itemid']);
+    // $sheet->setCellValue('B' . $row, $_POST['description']);
+    // $sheet->setCellValue('C' . $row, $_POST['quantity']);
+    // $sheet->setCellValue('D' . $row, $_POST['rate']);
+    // $writer = new Xlsx($spreadsheet);
+    // $writer->save('yourspreadsheet.xlsx');
+    $length = count($indexes);
+    for ($i = 0; $i < $length; $i++) {
+        $sheet->setCellValue("A" . ($indexes[$i] + 2), $itemid[$i]);
+        $sheet->setCellValue("B" . ($indexes[$i] + 2), $description[$i]);
+        $sheet->setCellValue("C" . ($indexes[$i] + 2), $quantity[$i]);
+        $sheet->setCellValue("D" . ($indexes[$i] + 2), $rate[$i]);
+    }
+    $writer = new Xlsx($spreadsheet);
+    $writer->save('yourspreadsheet.xlsx');
+}
+function addvendor()
+{
+    $date = date("m/d/Y");
+    $time = date('h:i a');
+    $vendorname = $_POST['vendorname'];
+    $vendorid = $_POST['vendorid'];
+    $remainingbalance = $_POST['remainingbalance'];
+    global $conn;
+    $stmt = $conn->prepare("INSERT INTO `vendors` (`date`, `time`, `vendorname`, `vendorid`, `remainingbalance`) VALUES (:date, :time, :vendorname, :vendorid, :remainingbalance)");
+    if ($stmt->execute([
+        'date' => $date,
+        'time' => $time,
+        'vendorname' => $vendorname,
+        'vendorid' => $vendorid,
+        'remainingbalance' => $remainingbalance,
+    ])) {
+        echo json_encode(true);
+    } else {
+        echo json_encode(false);
+    }
+}
+function addtransaction()
+{
+    $date = date("m/d/Y");
+    $time = date('h:i a');
+    $vendorname = $_POST['vendorname'];
+    $vendorid = $_POST['vendorid'];
+    $previousbalance = $_POST['previousbalance'];
+    $amountpaid = $_POST['amountpaid'];
+    global $conn;
+    $stmt = $conn->prepare("UPDATE `vendors` SET `remainingbalance` = :remainingbalance WHERE `vendors`.`vendorid` = :vendorid");
+    if ($stmt->execute([
+        'remainingbalance' => ($previousbalance - $amountpaid),
+        'vendorid' => $vendorid,
+
+    ])) {
+        $stmt = $conn->prepare("INSERT INTO `transactions` (`date`, `time`, `vendorname`, `vendorid`, `previousbalance`, `amountpaid`, `remainingbalance`) VALUES (:date, :time, :vendorname, :vendorid, :previousbalance, :amountpaid, :remainingbalance)");
+        if ($stmt->execute([
+            'date' => $date,
+            'time' => $time,
+            'vendorname' => $vendorname,
+            'vendorid' => $vendorid,
+            'previousbalance' => $previousbalance,
+            'amountpaid' => $amountpaid,
+            'remainingbalance' => ($previousbalance - $amountpaid)
+        ])) {
+            echo json_encode(true);
+        } else {
+            echo json_encode(false);
+        }
+    } else {
+        echo json_encode(false);
+    }
 }
 $conn = null;

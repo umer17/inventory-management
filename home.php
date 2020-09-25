@@ -40,6 +40,9 @@
                        <a href="addtoinventory.php" class="d-block m-2"> <button type="button" name="additems" class="btn btn-primary btn-customized text-center">Add Items</button></a>
                        <a href="editinventory.php" class="d-block m-2"> <button type="button" name="edititems" class="btn btn-primary btn-customized text-center">Edit Items</button></a>
                        <a href="searchbill.php" class="d-block m-2"> <button type="button" name="searchbill" class="btn btn-primary btn-customized text-center">Search Bill</button></a>
+                       <a href="vendorledger.php" class="d-block m-2"> <button type="button" name="vendorledger" class="btn btn-primary btn-customized text-center">Vendor Ledger</button></a>
+                       <a href="newvendor.php" class="d-block m-2"> <button type="button" name="newvendor" class="btn btn-primary btn-customized text-center">New Vendor </button></a>
+                       <a href="vendortransaction.php" class="d-block m-2"> <button type="button" name="vendortransaction" class="btn btn-primary btn-customized text-center">Vendor Transaction</button></a>
                         <!-- End input fields -->
                     </div>
 

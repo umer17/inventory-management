@@ -261,11 +261,15 @@
                                 <p>Total: </p><input type="hidden" name="total" type="number">
                             </label>
                             <label class="d-block" id="previousbalance" for="previousbalance">
-                                <p>Previous Balance: </p><input type="hidden" name="previousbalance"  type="number">
+                                <p>Previous Balance: </p><input type="hidden" name="previousbalance" type="number">
                             </label>
                             <label class="d-block" id="grandtotal" for="grandtotal">
                                 <p>Grand Total: </p><input type="hidden" name="grandtotal" type="number">
                             </label>
+                            <div class="form-inline mt-2">
+                                <label for="amountpaid">Amount Paid: </label>
+                                <input required class="form-control ml-2 mb-2" id="amountpaid" type="number" name="amountpaid">
+                            </div>
                         </div>
                         <div class=" mt-n3">
                             <button type="button" class="btn btn-primary btn-customized" onclick="return addRow()">+</button>
@@ -508,7 +512,7 @@
 
         function setPreviousBalance() {
             document.getElementById("previousbalance").getElementsByTagName("p")[0].innerHTML = "Previous Balance: " + document.getElementsByName("remainingbalance")[0].value;
-            
+
         }
 
         function setIndexes() {
@@ -539,7 +543,7 @@
 
 
         }
-       
+
         $(document).ready(function() {
 
             $.ajax({
@@ -551,36 +555,66 @@
                     data = result;
                     //MUTATION START
                     var observer = new MutationObserver(function(mutations, observer) {
-            // fired when a mutation occurs
+                        // fired when a mutation occurs
 
-            try {
-                $(".itemids").autocomplete({
-                    source: data[0],
-                    select: function(value, data) {
-                        // console.log(value.target,data.item.value);
-                        searchDescription(value.target, data.item.value);
-                    }
-                });
-                $(".description").autocomplete({
-                    source: data[1],
-                    select: function(value, data) {
-                        searchId(value.target, data.item.value);
-                    }
-                });
-            } catch (error) {
-                console.log(error);
-            }
+                        try {
+                            $(".itemids").autocomplete({
+                                source: data[0],
+                                html: true,
+                        response: function(event, ui) {
+
+                            // ui.content is the array that's about to be sent to the response callback.
+                            if (ui.content.length === 0) {
+                                var noResult = {
+                                    value: "",
+                                    label: "<button type=\"button\" class=\"btn btn-light btn-sm\" data-toggle=\"modal\" data-target=\"#exampleModal\" >Item not found, click to add</button>"
+                                };
+                                ui.content.push(noResult);
+
+                            } else {
+                                $("#empty-message").empty();
+                            }
+                        },
+                                select: function(value, data) {
+                                    // console.log(value.target,data.item.value);
+                                    searchDescription(value.target, data.item.value);
+                                }
+                            });
+                            $(".description").autocomplete({
+                                source: data[1],
+                                html: true,
+                        response: function(event, ui) {
+
+                            // ui.content is the array that's about to be sent to the response callback.
+                            if (ui.content.length === 0) {
+                                var noResult = {
+                                    value: "",
+                                    label: "<button type=\"button\" class=\"btn btn-light btn-sm\" data-toggle=\"modal\" data-target=\"#exampleModal\" >Item not found, click to add</button>"
+                                };
+                                ui.content.push(noResult);
+
+                            } else {
+                                $("#empty-message").empty();
+                            }
+                        },
+                                select: function(value, data) {
+                                    searchId(value.target, data.item.value);
+                                }
+                            });
+                        } catch (error) {
+                            console.log(error);
+                        }
 
 
-            // ...
-        });
-        observer.observe(document, {
-            // attributes: true,
-            childList: true,
-            // characterData: true,
-            subtree: true
-            //...
-        });
+                        // ...
+                    });
+                    observer.observe(document, {
+                        // attributes: true,
+                        childList: true,
+                        // characterData: true,
+                        subtree: true
+                        //...
+                    });
                     //MUTATION  END
                     $(".itemids").autocomplete({
                         source: data[0],

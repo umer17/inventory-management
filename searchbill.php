@@ -52,20 +52,21 @@
             if (isset($_GET['click'])) {
               renderTable($_GET['click']);
             } else { // echo count($xlsx->rows());
-
-              $pagecount = count($bills) / 10;
-              // echo ceil($pagecount);
+              // echo (count($bills));
+              
+              $pagecount = ceil(count($bills) / 10);
+              // echo ($pagecount);
               echo '<table id="bills"  class="table table-hover table-bordered"><tbody>';
-              $i = 0;
+              $i = 1;
+              echo "<tr><th>Sr. No</th><th>" . "Invoice Number" . "</th><th>" . "Customer Name" . "</th><th>" . "Grand Total" . "</th><th>" . "Date" . "</th></tr>";
 
               foreach ($bills as $elt) {
-                if ($i == 0) {
-                  echo "<tr><th>Sr. No</th><th>" . "Invoice Number" . "</th><th>" . "Customer Name" . "</th><th>" . "Grand Total" . "</th><th>" . "Date" . "</th></tr>";
-                } elseif ($i > 0 && $i > 10) {
+
+                if ($i > 0 && $i > 10) {
                   break;
                 } else {
 
-                  echo "<tr class='clickable-row' ><td>" . $i . "</td><td>" . $elt['invoicenumber'] .  "</td><td>" . $elt['customername']  .  "</td><td>" . $elt['grandtotal'] . "</td><td>" . strval($elt['date']) . "</td></tr>";
+                  echo "<tr class='clickable-row' ><td>" . ($i) . "</td><td>" . $elt['invoicenumber'] .  "</td><td>" . $elt['customername']  .  "</td><td>" . $elt['grandtotal'] . "</td><td>" . strval($elt['date']) . "</td></tr>";
                 }
 
                 $i++;
@@ -109,19 +110,18 @@
             $pagecount = count($bills) / 10;
             // echo ceil($pagecount);
             echo '<table id="bills" class="table  table-hover table-bordered"><tbody>';
-            $i = 0;
+            $i = 1;
+            echo "<tr><th>Sr. No</th><th>" . "Invoice Number" . "</th><th>" . "Customer Name" . "</th><th>" . "Grand Total" . "</th><th>" . "Date" . "</th></tr>";
 
             foreach ($bills as $elt) {
 
-              if ($i == 0) {
-                echo "<tr><th>Sr. No</th><th>" . "Invoice Number" . "</th><th>" . "Customer Name" . "</th><th>" . "Grand Total" . "</th><th>" . "Date" . "</th></tr>";
-              } elseif ($i < $loop_start) {
+              if ($i < $loop_start) {
                 $i++;
                 continue;
               } elseif ($i > $loop_end) {
                 break;
               } else {
-                echo "<tr class='clickable-row' ><td>" . $i . "</td><td>" . $elt['invoicenumber'] .  "</td><td>" . $elt['customername']  .  "</td><td>" . $elt['grandtotal'] . "</td><td>" . strval($elt['date']) . "</td></tr>";
+                echo "<tr class='clickable-row' ><td>" . ($i ) . "</td><td>" . $elt['invoicenumber'] .  "</td><td>" . $elt['customername']  .  "</td><td>" . $elt['grandtotal'] . "</td><td>" . strval($elt['date']) . "</td></tr>";
               }
 
               $i++;
@@ -178,14 +178,26 @@
   <script>
     let bills = JSON.parse('<?php echo json_encode($bills); ?>');
 
+function createCookie(name, value, days) {
+            var expires;
+            if (days) {
+                var date = new Date();
+                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                expires = "; expires=" + date.toGMTString();
+            } else {
+                expires = "";
+            }
+            document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+
+        }
     function checkemptybar(element) {
-     if(element.value.trim()=="")
-     {
-      location.reload();
-     }
+      if (element.value.trim() == "") {
+        location.reload();
+      }
     }
 
     function renderSingle(index) {
+      if(index!=-1){
       document.getElementById("bills").childNodes[0].innerHTML = `<tr><th>Sr. No</th><th>
       Invoice Number
       </th><th>
@@ -202,15 +214,45 @@
 
       document.getElementsByClassName("pagination")[0].style.visibility = "hidden"
       $(".clickable-row").click(function(element) {
-        console.log(element.target.parentElement.childNodes[1])
+        invoicenumber= element.target.parentElement.childNodes[1].innerHTML
         // window.location = $(this).data("href");
+        var payload = {
+          invoicenumber: invoicenumber,
+        };
+        var form = document.createElement('form');
+        form.style.visibility = 'hidden';
+        form.method = 'POST';
+        form.action = 'bill.php';
+        $.each(Object.keys(payload), function(index, key) {
+          var input = document.createElement('input');
+          input.name = key;
+          input.value = payload[key];
+          form.appendChild(input)
+        });
+        document.body.appendChild(form);
+        form.submit();
 
       });
-    }
+    }}
     jQuery(document).ready(function($) {
       $(".clickable-row").click(function(element) {
-        console.log(element.target.parentElement.childNodes[1])
+        invoicenumber= element.target.parentElement.childNodes[1].innerHTML
         // window.location = $(this).data("href");
+        var payload = {
+          invoicenumber: invoicenumber,
+        };
+        var form = document.createElement('form');
+        form.style.visibility = 'hidden';
+        form.method = 'POST';
+        form.action = 'bill.php';
+        $.each(Object.keys(payload), function(index, key) {
+          var input = document.createElement('input');
+          input.name = key;
+          input.value = payload[key];
+          form.appendChild(input)
+        });
+        document.body.appendChild(form);
+        form.submit();
 
       });
     });
