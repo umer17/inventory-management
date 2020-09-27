@@ -217,7 +217,7 @@ function createCookie(name, value, days) {
         invoicenumber= element.target.parentElement.childNodes[1].innerHTML
         // window.location = $(this).data("href");
         var payload = {
-          invoicenumber: invoicenumber,
+          invoicenumber: invoicenumber.trim(),
         };
         var form = document.createElement('form');
         form.style.visibility = 'hidden';
@@ -239,7 +239,7 @@ function createCookie(name, value, days) {
         invoicenumber= element.target.parentElement.childNodes[1].innerHTML
         // window.location = $(this).data("href");
         var payload = {
-          invoicenumber: invoicenumber,
+          invoicenumber: invoicenumber.trim(),
         };
         var form = document.createElement('form');
         form.style.visibility = 'hidden';

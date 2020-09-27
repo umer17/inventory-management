@@ -105,34 +105,7 @@
       return result;
     }
 
-    function func() {
-      event.preventDefault();
-      var itemid = $('#itemid1').val();
-      var description = $('#description1').val();
-      var quantity = $('#quantity1').val();
-      var rate = $('#rate1').val();
-      $.ajax({
-        type: 'POST',
-        url: 'controllers/formhandler.php',
-        data: {
-          addsingleitem: 'addsingleitem',
-          itemid: itemid,
-          description: description,
-          quantity: quantity,
-          rate: rate,
-        },
-        datatype: 'JSON',
-        success: function(data) {
-          console.log(data)
-
-        },
-        error: function(error) {
-          console.log(error)
-        },
-      });
-      $('#exampleModal').modal('toggle');
-      $('#confirmModal').modal('toggle');
-    }
+ 
   </script>
   <!-- Modal End -->
   <div class="container h-100">
@@ -545,6 +518,43 @@
 
 
     }
+    function func() {
+            event.preventDefault();
+            var itemid = $('#itemid1').val();
+            var description = $('#description1').val();
+            var quantity = $('#quantity1').val();
+            var rate = $('#rate1').val();
+            $.ajax({
+                type: 'POST',
+                url: 'controllers/formhandler.php',
+                data: {
+                    addsingleitem: 'addsingleitem',
+                    itemid: itemid,
+                    description: description,
+                    quantity: quantity,
+                    rate: rate,
+                },
+                datatype: 'JSON',
+                success: function(result) {
+                    
+                    $.ajax({
+                        type: 'get',
+                        url: 'controllers/search.php',
+                        dataType: 'json',
+                        cache: false,
+                        success: function(result) {
+                            data=result
+                            console.log("success")
+                        }
+                    });
+                },
+                error: function(error) {
+                    console.log(error)
+                },
+            });
+            $('#exampleModal').modal('toggle');
+            $('#confirmModal').modal('toggle');
+        }
 
     $(document).ready(function() {
       $.ajax({

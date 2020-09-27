@@ -101,35 +101,6 @@
             }
             return result;
         }
-
-        function func() {
-            event.preventDefault();
-            var itemid = $('#itemid1').val();
-            var description = $('#description1').val();
-            var quantity = $('#quantity1').val();
-            var rate = $('#rate1').val();
-            $.ajax({
-                type: 'POST',
-                url: 'controllers/formhandler.php',
-                data: {
-                    addsingleitem: 'addsingleitem',
-                    itemid: itemid,
-                    description: description,
-                    quantity: quantity,
-                    rate: rate,
-                },
-                datatype: 'JSON',
-                success: function(data) {
-                    console.log(data)
-
-                },
-                error: function(error) {
-                    console.log(error)
-                },
-            });
-            $('#exampleModal').modal('toggle');
-            $('#confirmModal').modal('toggle');
-        }
     </script>
     <!-- Modal End -->
 
@@ -544,6 +515,43 @@
 
         }
 
+        function func() {
+            event.preventDefault();
+            var itemid = $('#itemid1').val();
+            var description = $('#description1').val();
+            var quantity = $('#quantity1').val();
+            var rate = $('#rate1').val();
+            $.ajax({
+                type: 'POST',
+                url: 'controllers/formhandler.php',
+                data: {
+                    addsingleitem: 'addsingleitem',
+                    itemid: itemid,
+                    description: description,
+                    quantity: quantity,
+                    rate: rate,
+                },
+                datatype: 'JSON',
+                success: function(result) {
+                    
+                    $.ajax({
+                        type: 'get',
+                        url: 'controllers/search.php',
+                        dataType: 'json',
+                        cache: false,
+                        success: function(result) {
+                            data=result
+                            console.log("success")
+                        }
+                    });
+                },
+                error: function(error) {
+                    console.log(error)
+                },
+            });
+            $('#exampleModal').modal('toggle');
+            $('#confirmModal').modal('toggle');
+        }
         $(document).ready(function() {
 
             $.ajax({
@@ -561,20 +569,20 @@
                             $(".itemids").autocomplete({
                                 source: data[0],
                                 html: true,
-                        response: function(event, ui) {
+                                response: function(event, ui) {
 
-                            // ui.content is the array that's about to be sent to the response callback.
-                            if (ui.content.length === 0) {
-                                var noResult = {
-                                    value: "",
-                                    label: "<button type=\"button\" class=\"btn btn-light btn-sm\" data-toggle=\"modal\" data-target=\"#exampleModal\" >Item not found, click to add</button>"
-                                };
-                                ui.content.push(noResult);
+                                    // ui.content is the array that's about to be sent to the response callback.
+                                    if (ui.content.length === 0) {
+                                        var noResult = {
+                                            value: "",
+                                            label: "<button type=\"button\" class=\"btn btn-light btn-sm\" data-toggle=\"modal\" data-target=\"#exampleModal\" >Item not found, click to add</button>"
+                                        };
+                                        ui.content.push(noResult);
 
-                            } else {
-                                $("#empty-message").empty();
-                            }
-                        },
+                                    } else {
+                                        $("#empty-message").empty();
+                                    }
+                                },
                                 select: function(value, data) {
                                     // console.log(value.target,data.item.value);
                                     searchDescription(value.target, data.item.value);
@@ -583,20 +591,20 @@
                             $(".description").autocomplete({
                                 source: data[1],
                                 html: true,
-                        response: function(event, ui) {
+                                response: function(event, ui) {
 
-                            // ui.content is the array that's about to be sent to the response callback.
-                            if (ui.content.length === 0) {
-                                var noResult = {
-                                    value: "",
-                                    label: "<button type=\"button\" class=\"btn btn-light btn-sm\" data-toggle=\"modal\" data-target=\"#exampleModal\" >Item not found, click to add</button>"
-                                };
-                                ui.content.push(noResult);
+                                    // ui.content is the array that's about to be sent to the response callback.
+                                    if (ui.content.length === 0) {
+                                        var noResult = {
+                                            value: "",
+                                            label: "<button type=\"button\" class=\"btn btn-light btn-sm\" data-toggle=\"modal\" data-target=\"#exampleModal\" >Item not found, click to add</button>"
+                                        };
+                                        ui.content.push(noResult);
 
-                            } else {
-                                $("#empty-message").empty();
-                            }
-                        },
+                                    } else {
+                                        $("#empty-message").empty();
+                                    }
+                                },
                                 select: function(value, data) {
                                     searchId(value.target, data.item.value);
                                 }
