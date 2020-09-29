@@ -71,6 +71,31 @@ function getvendors()
     }
     return $vendors;
 }
+function getvendornames()
+{
+    global $conn;
+    $stmt = $conn->prepare("SELECT `vendorname` FROM vendors");
+    $vendors = array();
+    if ($stmt->execute()) {
+        // set the resulting array to associative
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $vendors[] = $row;
+        }
+    }
+    return $vendors;
+}function getcustomernames()
+{
+    global $conn;
+    $stmt = $conn->prepare("SELECT `customername` FROM customers");
+    $customers = array();
+    if ($stmt->execute()) {
+        // set the resulting array to associative
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $customers[] = $row;
+        }
+    }
+    return $customers;
+}
 function getvendortransactions()
 {
     global $conn;
@@ -83,4 +108,29 @@ function getvendortransactions()
         }
     }
     return $transactions;
+}function getcustomertransactions()
+{
+    global $conn;
+    $stmt = $conn->prepare("SELECT * FROM transactioncustomer");
+    $transactions = array();
+    if ($stmt->execute()) {
+        // set the resulting array to associative
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $transactions[] = $row;
+        }
+    }
+    return $transactions;
+}
+function getcustomers()
+{
+    global $conn;
+    $stmt = $conn->prepare("SELECT * FROM customers");
+    $customers = array();
+    if ($stmt->execute()) {
+        // set the resulting array to associative
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $customers[] = $row;
+        }
+    }
+    return $customers;
 }

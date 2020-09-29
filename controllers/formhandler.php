@@ -30,6 +30,8 @@ try {
         addvendor();
     } else if (isset($_POST['addtransaction'])) {
         addtransaction();
+    } else if (isset($_POST['addtransactioncustomer'])) {
+        addtransactioncustomer();
     }
 } catch (PDOException $e) {
     echo "Connection failed: " . $e->getMessage();
@@ -156,6 +158,23 @@ function generatenew()
                 </script>";
         }
     }
+
+    $stmt = $conn->prepare("INSERT INTO `transactioncustomer` (`date`, `time`, `customername`, `accountid`, `previousbalance`, `amountpaid`, `bill`,`totalbill`, `remainingbalance`) VALUES (:date, :time, :customername, :accountid, :previousbalance, :amountpaid, :bill, :totalbill, :remainingbalance)");
+    if ($stmt->execute([
+        'date' => $date,
+        'time' => $time,
+        'customername' => $customername,
+        'accountid' => $accountid,
+        'previousbalance' => $remainingbalance,
+        'amountpaid' => $amountpaid,
+        'bill' => $total,
+        'totalbill' => $grandtotal,
+        'remainingbalance' => ($grandtotal - $amountpaid)
+    ])) {
+        echo json_encode(true);
+    } else {
+        echo json_encode(false);
+    }
 }
 function generateexisting()
 {
@@ -281,6 +300,46 @@ function generateexisting()
             echo "<script type='text/javascript'>alert('$message');
                 </script>";
         }
+    }
+    // $stmt = $conn->prepare("UPDATE `transactioncustomer` SET `remainingbalance` = :remainingbalance WHERE `transactioncustomer`.`accountid` = :accountid");
+    // if ($stmt->execute([
+    //     'remainingbalance' => ($amountpaid - $previousbalance),
+    //     'accountid' => $accountid,
+
+    // ])) {
+    //     $stmt = $conn->prepare("INSERT INTO `transactioncustomer` (`date`, `time`, `customername`, `accountid`, `previousbalance`, `amountpaid`, `remainingbalance`) VALUES (:date, :time, :customername, :accountid, :previousbalance, :amountpaid, :remainingbalance)");
+    //     if ($stmt->execute([
+    //         'date' => $date,
+    //         'time' => $time,
+    //         'customername' => $customername,
+    //         'accountid' => $accountid,
+    //         'previousbalance' => $previousbalance,
+    //         'amountpaid' => $amountpaid,
+    //         'remainingbalance' => (  $amountpaid - $previousbalance)
+    //     ])) {
+    //         echo json_encode(true);
+    //     } else {
+    //         echo json_encode(false);
+    //     }
+    // } else {
+    //     echo json_encode(false);
+    // }
+
+    $stmt = $conn->prepare("INSERT INTO `transactioncustomer` (`date`, `time`, `customername`, `accountid`, `previousbalance`, `amountpaid`, `bill`,`totalbill`, `remainingbalance`) VALUES (:date, :time, :customername, :accountid, :previousbalance, :amountpaid, :bill, :totalbill, :remainingbalance)");
+    if ($stmt->execute([
+        'date' => $date,
+        'time' => $time,
+        'customername' => $customername,
+        'accountid' => $accountid,
+        'previousbalance' => $previousbalance,
+        'amountpaid' => $amountpaid,
+        'bill' => $total,
+        'totalbill' => $grandtotal,
+        'remainingbalance' => ($grandtotal - $amountpaid)
+    ])) {
+        echo json_encode(true);
+    } else {
+        echo json_encode(false);
     }
 }
 function additems()
@@ -411,22 +470,24 @@ function addtransaction()
     $vendorid = $_POST['vendorid'];
     $previousbalance = $_POST['previousbalance'];
     $amountpaid = $_POST['amountpaid'];
+    $remarks = $_POST['remarks'];
     global $conn;
-    $stmt = $conn->prepare("UPDATE `vendors` SET `remainingbalance` = :remainingbalance WHERE `vendors`.`vendorid` = :vendorid");
-    if ($stmt->execute([
-        'remainingbalance' => ($previousbalance - $amountpaid),
-        'vendorid' => $vendorid,
 
+    $stmt = $conn->prepare("INSERT INTO `transactions` (`date`, `time`, `vendorname`, `vendorid`, `previousbalance`, `amountpaid`, `remainingbalance`, `remarks`) VALUES (:date, :time, :vendorname, :vendorid, :previousbalance, :amountpaid, :remainingbalance, :remarks)");
+    if ($stmt->execute([
+        'date' => $date,
+        'time' => $time,
+        'vendorname' => $vendorname,
+        'vendorid' => $vendorid,
+        'previousbalance' => $previousbalance,
+        'amountpaid' => $amountpaid,
+        'remainingbalance' => ($previousbalance - $amountpaid),
+        'remarks' => $remarks,
     ])) {
-        $stmt = $conn->prepare("INSERT INTO `transactions` (`date`, `time`, `vendorname`, `vendorid`, `previousbalance`, `amountpaid`, `remainingbalance`) VALUES (:date, :time, :vendorname, :vendorid, :previousbalance, :amountpaid, :remainingbalance)");
+        $stmt = $conn->prepare("UPDATE `vendors` SET `remainingbalance` = :amountpaid WHERE `vendors`.`vendorid` = :accountid");
         if ($stmt->execute([
-            'date' => $date,
-            'time' => $time,
-            'vendorname' => $vendorname,
-            'vendorid' => $vendorid,
-            'previousbalance' => $previousbalance,
-            'amountpaid' => $amountpaid,
-            'remainingbalance' => ($previousbalance - $amountpaid)
+            'accountid' => $vendorid,
+            'amountpaid' => ($previousbalance - $amountpaid)
         ])) {
             echo json_encode(true);
         } else {
@@ -434,6 +495,41 @@ function addtransaction()
         }
     } else {
         echo json_encode(false);
+    }
+}
+function addtransactioncustomer()
+{
+    $date = date("m/d/Y");
+    $time = date('h:i a');
+    $customername = $_POST['customername'];
+    $accountid = $_POST['accountid'];
+    $previousbalance = $_POST['previousbalance'];
+    $amountpaid = $_POST['amountpaid'];
+    $remarks = $_POST['remarks'];
+    global $conn;
+    $stmt = $conn->prepare("INSERT INTO `transactioncustomer` (`date`, `time`, `customername`, `accountid`, `previousbalance`, `amountpaid`, `bill`,`totalbill`, `remainingbalance`,`remarks`) VALUES (:date, :time, :customername, :accountid, :previousbalance, :amountpaid, :bill, :totalbill, :remainingbalance,:remarks)");
+    if ($stmt->execute([
+        'date' => $date,
+        'time' => $time,
+        'customername' => $customername,
+        'accountid' => $accountid,
+        'previousbalance' => $previousbalance,
+        'amountpaid' => $amountpaid,
+        'bill' => $previousbalance,
+        'totalbill' => $previousbalance,
+        'remainingbalance' => ($previousbalance - $amountpaid),
+        'remarks' => $remarks
+    ])) {
+        $stmt = $conn->prepare("UPDATE `customers` SET `remainingbalance` = :amountpaid WHERE `customers`.`accountid` = :accountid");
+        if ($stmt->execute([
+            'accountid' => $accountid,
+            'amountpaid' => ($previousbalance - $amountpaid)
+        ])) {
+            echo json_encode(true);
+        } else {
+            echo json_encode(false);
+        }
+    } else {
     }
 }
 $conn = null;

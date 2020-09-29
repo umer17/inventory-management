@@ -36,6 +36,8 @@
                     <div class="text-center ">
                         <a href="billexisting.php" class="d-block m-2"><button type="button" name="billexisting" class=" btn btn-primary btn-customized text-center">Bill Existing Customer</button></a>
                        <a href="billnew.php" class="d-block m-2"> <button type="button" name="billnew" class="btn btn-primary btn-customized text-center">Bill New Customer</button></a>
+                       <a href="customertransaction.php" class="d-block m-2"> <button type="button" name="customertransaction" class="btn btn-primary btn-customized text-center">Customer Transaction</button></a>
+                       <a href="customerledger.php" class="d-block m-2"> <button type="button" name="customerledger" class="btn btn-primary btn-customized text-center">Customer Ledger</button></a>
                        <a href="importinventory.php" class="d-block m-2"> <button type="button" name="importinventory" class="btn btn-primary btn-customized text-center">Import Inventory</button></a>
                        <a href="addtoinventory.php" class="d-block m-2"> <button type="button" name="additems" class="btn btn-primary btn-customized text-center">Add Items</button></a>
                        <a href="editinventory.php" class="d-block m-2"> <button type="button" name="edititems" class="btn btn-primary btn-customized text-center">Edit Items</button></a>

@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="styles/global.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.0/themes/smoothness/jquery-ui.css" />
-    <title>Vendor Transaction</title>
+    <title>Customer Transaction</title>
 </head>
 
 <body class="h-100">
@@ -15,8 +15,8 @@
     //   session_start();
 
     include 'controllers/functions.php';
-    global $vendors;
-    $vendors = getvendors();
+    global $customers;
+    $customers = getcustomers();
     ?>
     <!-- Modal Start-->
     <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -43,15 +43,15 @@
             <div class="col-10 col-md-10 col-lg-10">
                 <!-- Form -->
                 <form class="form-example table-responsive" onsubmit="addTransaction()" method="post">
-                    <h1 class="text-center"> Vendor Transaction</h1>
+                    <h1 class="text-center"> Customer Transaction</h1>
                     <!-- Input fields -->
                     <div class="form-group">
-                        <label for="vendorname">Vendor Name:</label>
-                        <input required type="text" class="form-control" onkeyup="checkifempty(this)" id="vendorname" placeholder="Vendor Name" name="vendorname">
+                        <label for="customername">Customer Name:</label>
+                        <input required type="text" class="form-control" onkeyup="checkifempty(this)" id="customername" placeholder="Customer Name" name="customername">
                     </div>
                     <div class="form-group">
-                        <label for="vendorid">Vendor ID:</label>
-                        <input readonly required type="text" class="form-control" id="vendorid" placeholder="Vendor ID" name="vendorid">
+                        <label for="accountid">Account ID:</label>
+                        <input readonly required type="text" class="form-control" id="accountid" placeholder="Account ID" name="accountid">
                     </div>
                     <div class="form-group">
                         <label for="previousbalance">Previous Balance:</label>
@@ -85,9 +85,9 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
     <script>
-        let vendors;
+        let customers;
         let names = [];
-        // console.log(vendors);
+        // console.log(customers);
 
         var today = new Date();
         var dd = String(today.getDate()).padStart(2, '0');
@@ -114,9 +114,9 @@
                 type: 'POST',
                 url: 'controllers/formhandler.php',
                 data: {
-                    addtransaction: 'asd',
-                    vendorname: document.getElementById("vendorname").value,
-                    vendorid: document.getElementById("vendorid").value,
+                    addtransactioncustomer: 'asd',
+                    customername: document.getElementById("customername").value,
+                    accountid: document.getElementById("accountid").value,
                     previousbalance: Number(document.getElementById("previousbalance").value),
                     amountpaid: Number(document.getElementById("amountpaid").value),
                     remarks: document.getElementById("remarks").value,
@@ -139,26 +139,26 @@
 
         function fillDetails(index) {
             if (index != -1) {
-                document.getElementById("vendorid").value = vendors[index]['vendorid'];
-                document.getElementById("previousbalance").value = vendors[index]['remainingbalance'];
+                document.getElementById("accountid").value = customers[index]['accountid'];
+                document.getElementById("previousbalance").value = customers[index]['remainingbalance'];
             }
         }
 
         function checkifempty(element) {
             if (element.value.trim() == "") {
-                document.getElementById("vendorid").value = "";
+                document.getElementById("accountid").value = "";
                 document.getElementById("previousbalance").value = "";
             }
         }
 
         jQuery(document).ready(function($) {
-            vendors = JSON.parse('<?php echo json_encode($vendors); ?>');
-            Object.keys(vendors).forEach(function(key) {
-                var value = vendors[key];
-                names.push(value['vendorname']);
+            customers = JSON.parse('<?php echo json_encode($customers); ?>');
+            Object.keys(customers).forEach(function(key) {
+                var value = customers[key];
+                names.push(value['customername']);
                 // ...
             });
-            $("#vendorname").autocomplete({
+            $("#customername").autocomplete({
                 source: names,
                 // html: true,
                 response: function(event, ui) {
@@ -167,7 +167,7 @@
                     if (ui.content.length === 0) {
                         var noResult = {
                             value: "",
-                            label: "No Vendors Found"
+                            label: "No customers Found"
                         };
                         ui.content.push(noResult);
 

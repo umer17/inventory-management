@@ -239,7 +239,7 @@
                             </label>
                             <div class="form-inline mt-2">
                                 <label for="amountpaid">Amount Paid: </label>
-                                <input required class="form-control ml-2 mb-2" id="amountpaid" type="number" name="amountpaid">
+                                <input  class="form-control ml-2 mb-2" id="amountpaid" type="number" name="amountpaid">
                             </div>
                         </div>
                         <div class=" mt-n3">

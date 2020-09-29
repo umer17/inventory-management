@@ -17,10 +17,12 @@
   <form class="text-center" action="controllers/upload.php" method="post" enctype="multipart/form-data">
         <h2 class="text-center mt-2">Import Inventory</h2>
         <!-- <label for="fileSelect">Filename:</label> -->
-        <input class="mt-2" type="file" name="excel" id="fileSelect">
-        <input class="mt-2" type="submit" name="submit" value="Upload">
+        <input class="mt-2 " type="file" name="excel" id="fileSelect">
+        <input class="mt-2 " type="submit" name="submit" value="Upload">
         <p class="mt-2"><strong>Note:</strong> Only Excel files are allowed </p>
     </form>
+    <a href="upload/inventory.xlsx" class="d-block m-2"> <button type="button" name="download" class="btn btn-primary text-center">Export Excel</button></a>
+
     </div>
     </div>
 </div>

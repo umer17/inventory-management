@@ -17,11 +17,7 @@
     <div class="container h-100">
         <div class="row h-100 justify-content-center align-items-center">
             <div class="col-10 col-md-10 col-lg-10">
-                <div class="row align-items-center text-center h-100"> 
-                    <img src="images/logo.jpg" class="text-center mx-auto " alt="Logo" width="300" height="100">
-
-                    <!-- <h1 class="text-center">Invoice</h1> -->
-                </div>
+                
                 <?php
                 include 'controllers/functions.php';
                 // $bill = getbill('Okhf8GAvDOj0aNIL');
@@ -31,8 +27,17 @@
 
                 ?>
 
-                <div id="divToPrint">
+                <!-- <div id="divToPrint"> -->
                     <?php
+                    $numberofitems=count($items);
+                    $pages=ceil($numberofitems/5);
+                    $item=0;
+                    for($i=0;$i<$pages;$i++){
+                       echo ' <div class="row align-items-center text-center h-100"> 
+                    <img src="images/logo.jpg" class="text-center mx-auto " alt="Logo" width="300" height="100">
+
+                    <!-- <h1 class="text-center">Invoice</h1> -->
+                </div>';
                     echo "<div>";
                     echo "<div class='float-left'>";
                     echo "<p><strong>Invoice Number:</strong> " . $_POST['invoicenumber'] . "</p>";
@@ -64,26 +69,30 @@
 
                     echo "<tr><th>S. NO</th><th>" . "ITEM ID" . "</th><th>" . "DESCRIPTION" . "</th><th>" . "QTY" . "</th><th>" . "RATE" . "</th><th>AMOUNT</th></tr>";
                     $totalquantity = 0;
-                    for ($i = 0; $i < count($items); $i++) {
-                        echo "<tr><td>" . ($i + 1) . "</td><td>" . $items[$i]['itemid'] .  "</td><td>" . $items[$i]['description']  .  "</td><td>" . $items[$i]['quantity'] . "</td><td>" . $items[$i]['rate'] . "</td><td>" . $items[$i]['amount'] . "</td></tr>";
-                        $totalquantity += $items[$i]['quantity'];
-                        echo "<div class='pagebreak'> </div>";
+                    for ($j = 0; $j < 5; $j++) {
+                        if($item<count($items)){
+                        echo "<tr><td>" . ($item + 1) . "</td><td>" . $items[$item]['itemid'] .  "</td><td>" . $items[$item]['description']  .  "</td><td>" . $items[$item]['quantity'] . "</td><td>" . $items[$item]['rate'] . "</td><td>" . $items[$item]['amount'] . "</td></tr>";
+                        $totalquantity += $items[$item]['quantity'];
+                      $item+=1;}
                     }
                     echo "<tr><td colspan='3' class='border-right-0'>Total: </td><td colspan='3' class='border-left-0'>" . $totalquantity . "</td></tr>";
                     echo '</tbody></table>';
                     echo "</div>";
+                    if($i+1!=$pages){
+echo '<div class="pagebreak"></div>';
+                    }
+                }
 
-
-                    echo "<div class='float-right'>";
+                    echo "<div class='float-right '>";
                     echo "<p ><strong>Total: </strong>" . $bill[0]['total'] . "</p>";
                     echo "<p ><strong>Previous Balance: </strong>" . $bill[0]['previousbalance'] . "</p>";
                     echo "<p ><strong>Grand Total: </strong>" . $bill[0]['grandtotal'] . "</p>";
                     echo "<p ><strong>Amount Paid: </strong>" . $bill[0]['amountpaid'] . "</p>";
-
                     echo "</div>";
+                    
                     ?>
 
-                </div>
+                <!-- </div> -->
                 <!-- <div>
                     <input type="button" value="print" onclick="PrintDiv();" />
                 </div> -->

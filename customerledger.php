@@ -13,7 +13,7 @@
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type='text/css'>
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.0/themes/smoothness/jquery-ui.css" />
 
-    <title>Vendor Ledger</title>
+    <title>Customer Ledger</title>
 </head>
 
 <body class="h-100">
@@ -22,16 +22,17 @@
 
     include 'controllers/functions.php';
     global $transactions;
-    global $vendornames;
-    $vendornames = getvendornames();
-    $transactions = getvendortransactions();
+    global $customernames;
+    $customernames = getcustomernames();
+
+    $transactions = getcustomertransactions();
     ?>
     <div class="container h-100">
         <div class="row h-100 justify-content-center align-items-center">
             <div class="col-10 col-md-10 col-lg-10">
                 <!-- Form -->
 
-                <h1 class="text-center">Vendor Ledger</h1>
+                <h1 class="text-center">Customer Ledger</h1>
 
                 <!-- Input fields -->
 
@@ -64,7 +65,7 @@
                             // echo ($pagecount);
                             echo '<table id="transactions"  class="table table-hover table-bordered"><tbody>';
                             $i = 1;
-                            echo "<tr><th>Sr. No</th><th>" . "Vendor ID" . "</th><th>" . "Vendor Name" . "</th><th>" . "Date" . "</th><th>" . "Time" . "</th><th>Previous Balance</th><th>Amount Paid</th><th> Remaining Balance</th><th>Remarks</th></tr>";
+                            echo "<tr><th>Sr. No</th><th>" . "Account ID" . "</th><th>" . "Customer Name" . "</th><th>" . "Date" . "</th><th>" . "Time" . "</th><th>Previous Balance</th><th>Bill</th><th>Total Bill</th><th>Amount Paid</th><th> Remaining Balance</th><th>Remarks</th></tr>";
 
                             foreach ($transactions as $elt) {
 
@@ -72,7 +73,7 @@
                                     break;
                                 } else {
 
-                                    echo "<tr ><td>" . ($i) . "</td><td>" . $elt['vendorid'] .  "</td><td>" . $elt['vendorname']  .  "</td><td>" . $elt['date'] . "</td><td>" . strval($elt['time']) . "</td><td>" . $elt['previousbalance'] . "</td><td>" . $elt['amountpaid'] . "</td><td>" . $elt['remainingbalance'] . "</td><td>" . $elt['remarks'] . "</td></tr>";
+                                    echo "<tr ><td>" . ($i) . "</td><td>" . $elt['accountid'] .  "</td><td>" . $elt['customername']  .  "</td><td>" . $elt['date'] . "</td><td>" . strval($elt['time']) . "</td><td>" . $elt['previousbalance'] . "</td><td>" . $elt['bill'] . "</td><td>" . $elt['totalbill'] . "</td><td>" . $elt['amountpaid'] . "</td><td>" . $elt['remainingbalance'] . "</td><td>" . $elt['remarks'] . "</td></tr>";
                                 }
 
                                 $i++;
@@ -87,7 +88,7 @@
 
                             for ($i = 0; $i < $pagecount; $i++) {
                                 echo '<li class="page-item ">';
-                                echo "<a class=\"page-link\" href=\"vendorledger.php?click=" . ($i + 1) . "\">" . ($i + 1) . "</a>";
+                                echo "<a class=\"page-link\" href=\"customerledger.php?click=" . ($i + 1) . "\">" . ($i + 1) . "</a>";
                                 echo '</li>';
                             }
                             echo '</ul> </nav>';
@@ -120,7 +121,7 @@
                         // echo ceil($pagecount);
                         echo '<table id="transactions" class="table  table-hover table-bordered"><tbody>';
                         $i = 1;
-                        echo "<tr><th>Sr. No</th><th>" . "Vendor ID" . "</th><th>" . "Vendor Name" . "</th><th>" . "Date" . "</th><th>" . "Time" . "</th><th>Previous Balance</th><th>Amount Paid</th><th> Remaining Balance</th><th>Remarks</th></tr>";
+                        echo "<tr><th>Sr. No</th><th>" . "Account ID" . "</th><th>" . "Customer Name" . "</th><th>" . "Date" . "</th><th>" . "Time" . "</th><th>Previous Balance</th><th>Bill</th><th>Total Bill</th><th>Amount Paid</th><th> Remaining Balance</th><th>Remarks</th></tr>";
 
                         foreach ($transactions as $elt) {
 
@@ -131,7 +132,7 @@
                                 break;
                             } else {
 
-                                echo "<tr ><td>" . ($i) . "</td><td>" . $elt['vendorid'] .  "</td><td>" . $elt['vendorname']  .  "</td><td>" . $elt['date'] . "</td><td>" . strval($elt['time']) . "</td><td>" . $elt['previousbalance'] . "</td><td>" . $elt['amountpaid'] . "</td><td>" . $elt['remainingbalance'] . "</td><td>" . $elt['remarks'] . "</td></tr>";
+                                echo "<tr ><td>" . ($i) . "</td><td>" . $elt['accountid'] .  "</td><td>" . $elt['customername']  .  "</td><td>" . $elt['date'] . "</td><td>" . strval($elt['time']) . "</td><td>" . $elt['previousbalance'] . "</td><td>" . $elt['bill'] . "</td><td>" . $elt['totalbill'] . "</td><td>" . $elt['amountpaid'] . "</td><td>" . $elt['remainingbalance'] . "</td><td>" . $elt['remarks'] . "</td></tr>";
                             }
 
                             $i++;
@@ -146,7 +147,7 @@
 
                         for ($i = 0; $i < $pagecount; $i++) {
                             echo '<li class="page-item ">';
-                            echo "<a class=\"page-link\" href=\"vendorledger.php?click=" . ($i + 1) . "\">" . ($i + 1) . "</a>";
+                            echo "<a class=\"page-link\" href=\"customerledger.php?click=" . ($i + 1) . "\">" . ($i + 1) . "</a>";
                             echo '</li>';
                         }
                         echo '</ul></nav>';
@@ -205,31 +206,33 @@
 
         function renderTransactions(value) {
             if (value.trim() != '') {
-                var totalpaid=0;
-                var totalprevious=0;
+                var totalpaid = 0;
+                var totalprevious = 0;
                 var totalremaining = 0;
                 var x = 0;
                 var html
                 html = `<table id=\"transactions\"  class=\"table table-hover table-bordered\"><tbody>
-                <tr><th>Sr. No</th><th>Vendor ID</th><th>Vendor Name</th><th>Date</th><th>Time</th>
-                <th>Previous Balance</th><th>Amount Paid</th><th> Remaining Balance</th><th>Remarks</th></tr>
+                <tr><th>Sr. No</th><th>Account ID</th><th>Customer Name</th><th>Date</th><th>Time</th>
+                <th>Previous Balance</th><th>Bill</th><th>Total Bill</th><th>Amount Paid</th><th> Remaining Balance</th><th>Remarks</th></tr>
                 `
                 for (var i = 0; i < transactions.length; i++) {
 
-                    if (transactions[i]['vendorname'] == value) {
+                    if (transactions[i]['customername'] == value) {
                         x += 1;
-                        totalpaid+=Number(transactions[i]['amountpaid']);
-                        totalprevious+=Number(transactions[i]['previousbalance']);
-                        totalremaining+=Number(transactions[i]['remainingbalance']);
-                        html += `<tr><td>${x}</td><td>${transactions[i]['vendorid']}</td>
-                        <td>${transactions[i]['vendorname']}</td><td>${transactions[i]['date']}</td>
+                        totalpaid += Number(transactions[i]['amountpaid']);
+                        totalprevious += Number(transactions[i]['previousbalance']);
+                        totalremaining += Number(transactions[i]['remainingbalance']);
+                        html += `<tr><td>${x}</td><td>${transactions[i]['accountid']}</td>
+                        <td>${transactions[i]['customername']}</td><td>${transactions[i]['date']}</td>
                         <td>${transactions[i]['time']}</td> <td>${transactions[i]['previousbalance']}</td>
+                        <td>${transactions[i]['bill']}</td><td>${transactions[i]['totalbill']}</td>
                         <td>${transactions[i]['amountpaid']}</td><td>${transactions[i]['remainingbalance']}</td>
                         <td>${transactions[i]['remarks']}</td></tr>`
                     }
                 }
                 html+=`<tr><td colspan='5'><strong>Total: </strong></td>
                 <td><strong>${totalprevious}</strong></td>
+                <td></td><td></td>
                 <td><strong>${totalpaid}</strong></td><td><strong>${totalremaining}</strong></td>
                 <td></td></tr>`
                 html += `</tbody></table>`;
@@ -241,15 +244,14 @@
             }
         }
 
-        vendornames = []
-        
-         vendors = JSON.parse('<?php echo json_encode($vendornames); ?>');
-         vendors.forEach((element) => {
-            vendornames.push(element['vendorname']);
+        customernames = []
+        customers = JSON.parse('<?php echo json_encode($customernames); ?>');
+         customers.forEach((element) => {
+            customernames.push(element['customername']);
         });
-        console.log(vendornames);
+        console.log(customernames);
         $(".searchtransaction").autocomplete({
-            source: vendornames,
+            source: customernames,
             html: true,
             response: function(event, ui) {
 
