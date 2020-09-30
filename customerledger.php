@@ -18,7 +18,7 @@
 
 <body class="h-100">
     <?php
-    session_start();
+
 
     include 'controllers/functions.php';
     global $transactions;
@@ -27,6 +27,13 @@
 
     $transactions = getcustomertransactions();
     ?>
+        <?php session_start();
+    if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']=='1') { ?>
+    <div class="m-2">
+            <a href="home.php" class="text-decoration-none">
+            <img src="images/home.png" class="text-center mx-auto  " alt="Logo" width="40" height="auto">
+<p class="font-weight-bold" style="font-size:0.8rem;color:black">HOME</p>
+            </a></div>
     <div class="container h-100">
         <div class="row h-100 justify-content-center align-items-center">
             <div class="col-10 col-md-10 col-lg-10">
@@ -48,7 +55,6 @@
                 <div class="table-responsive-sm">
 
                     <?php
-                    renderfirst();
                     function renderfirst()
                     {
                         global $transactions;
@@ -152,6 +158,7 @@
                         }
                         echo '</ul></nav>';
                     }
+                    renderfirst();
 
                     ?>
 
@@ -166,7 +173,15 @@
 
 
 
+    <?php } else {
+        $message = 'You must login to see this page';
+        echo
+            "<script type='text/javascript'>
 
+alert('$message');
+window.location.href = 'login.php';	
+            </script>";
+    } ?>
 
 
 

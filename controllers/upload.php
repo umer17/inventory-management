@@ -22,15 +22,23 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         // Verify MYME type of the file
         if(in_array($filetype, $mimes)){
             // Check whether file exists before uploading it
-           
-                move_uploaded_file($_FILES["excel"]["tmp_name"], "../upload/" . "inventory.".$ext);
-                echo "Your file was uploaded successfully.";
+            echo "<script type='text/javascript'>alert('Your file was uploaded SUCCESSFULLY');
+            window.location.href='../importinventory.php';
+        </script>";
             
+              
         } else{
-            echo "Error: There was a problem uploading your file. Please try again."; 
+            echo "<script type='text/javascript'>alert('File Was NOT Uploaded');
+            window.location.href='../importinventory.php';
+        </script>";
+            
+
         }
     } else{
-        echo "Error: " . $_FILES["excel"]["error"];
+        echo "<script type='text/javascript'>alert('File Was NOT Uploaded');
+        window.location.href='../importinventory.php';
+    </script>";
+
+        // echo "Error: " . $_FILES["excel"]["error"];
     }
 }
-?>

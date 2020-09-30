@@ -2,20 +2,22 @@
 <html lang="en" class="h-100">
 
 <head>
-
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="styles/global.css">
+    
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <!-- <link rel="stylesheet" href="styles/table.css"> -->
+    
     <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.0/themes/smoothness/jquery-ui.css" />
-
+    <link rel="stylesheet" href="styles/global.css">
     <title>Bill New Customer</title>
 </head>
 
 <body class="h-100">
+<?php session_start();
+    if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']=='1') { ?>
     <!-- Modal Start-->
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -34,7 +36,6 @@
                         </div>
                         <div class="form-group">
                             <label for="description1">Descritpion:</label>
-
                             <input name="description" class="form-control" id="description1" onkeyup="generateID(this)" placeholder="Description" required type="text">
                         </div>
                         <div class="form-group">
@@ -53,9 +54,7 @@
             </div>
         </div>
     </div>
-
     <!-- SECOND MODAL -->
-
     <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -70,7 +69,6 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary text-center" data-dismiss="modal">Ok</button>
-
                 </div>
             </div>
         </div>
@@ -78,7 +76,6 @@
     <!-- SECOND MODAL END-->
     <script>
         function generateID(element) {
-
             let values = element.value.split(' ');
             let finalString = "";
             console.log(values);
@@ -87,7 +84,6 @@
                 finalString += item.substring(0, 1).toUpperCase();
                 // element.parentElement.previousElementSibling.childNodes[0].value = item.substring(0,1);
             });
-
             document.getElementById("itemid1").value = finalString + makeid(3);
             // }
         }
@@ -102,15 +98,18 @@
             return result;
         }
     </script>
+    <div class="m-2">
+            <a href="home.php" class="text-decoration-none">
+            <img src="images/home.png" class="text-center mx-auto  " alt="Logo" width="40" height="auto">
+<p class="font-weight-bold" style="font-size:0.8rem;color:black">HOME</p>
+            </a></div>
     <!-- Modal End -->
-
     <div class="container h-100">
         <div class="row h-100 justify-content-center align-items-center">
             <div class="col-10 col-md-10 col-lg-10">
                 <!-- Form -->
                 <form class="form-example table-responsive" action="controllers/formhandler.php" method="post">
                     <h1 class="text-center">Bill New Customer</h1>
-
                     <!-- Input fields -->
                     <div class="form-group">
                         <label for="customer_name">Customer Name:</label>
@@ -123,7 +122,6 @@
                     <div class="form-group">
                         <label for="remainingbalance">Remaining Balance:</label>
                         <input class="form-control remainingbalance" type="number" placeholder="Remaining Balance" onkeyup="setPreviousBalance()" name="remainingbalance">
-
                     </div>
                     <div class="form-group">
                         <label id="date" for="date">Date: </label>
@@ -134,7 +132,6 @@
                                 <input type="radio" class="custom-control-input" id="bank" onclick="return toggleinput()" value="bank" name="transactiontype" checked>
                                 <label class="custom-control-label" for="bank">Bank</label>
                             </div>
-
                             <!-- Default checked -->
                             <div class="custom-control custom-radio d-inline">
                                 <input type="radio" class="custom-control-input" id="easypaisa" onclick="return toggleinput()" value="easypaisa" name="transactiontype">
@@ -144,11 +141,8 @@
                                 <input type="radio" class="custom-control-input" id="cash" onclick="return toggleinput()" value="cash" name="transactiontype">
                                 <label class="custom-control-label" for="cash">Cash</label>
                             </div>
-
-
                         </div>
                     </div>
-
                     <div class="form-group">
                         <label id="time" for="date">Time: </label>
                         <div id="transactionnumberdiv" class="float-right form-inline">
@@ -160,7 +154,6 @@
                         <label for="receivername">Receiver Name:</label>
                         <input required type="text" class="form-control ml-2  receivername" id="receivername" placeholder="Receiver Name" name="receivername">
                     </div>
-
                     <div class="form-inline">
                         <label for="carton">Carton: </label>
                         <input class="form-control ml-2" id="carton" type="number" onkeyup="getTotalCartons()" placeholder="Carton" name="carton">
@@ -198,8 +191,6 @@
                                     <td><input type="hidden" name="amount[]" required type="number">
                                         <p class="text-center"></p>
                                     </td>
-
-
                                 </tr>
                                 <tr>
                                     <td>2</td>
@@ -239,47 +230,45 @@
                             </label>
                             <div class="form-inline mt-2">
                                 <label for="amountpaid">Amount Paid: </label>
-                                <input  class="form-control ml-2 mb-2" id="amountpaid" type="number" name="amountpaid">
+                                <input class="form-control ml-2 mb-2" id="amountpaid" type="number" name="amountpaid">
                             </div>
                         </div>
                         <div class=" mt-n3">
                             <button type="button" class="btn btn-primary btn-customized" onclick="return addRow()">+</button>
                         </div>
                     </div>
-
-
-
                     <input type="hidden" name="indexes[]" type="number">
                     <!-- TABLE END -->
                     <div class="text-center">
                         <button type="submit" name="generatenew" onclick="return setIndexes()" class="btn btn-primary btn-customized text-center">Generate Bill</button>
                         <!-- End input fields -->
                     </div>
-
                 </form>
                 <!-- Form end -->
-
-
             </div>
         </div>
     </div>
+    <?php } else {
+        $message = 'You must login to see this page';
+        echo
+            "<script type='text/javascript'>
 
+alert('$message');
+window.location.href = 'login.php';	
+            </script>";
+    } ?>
     <script type="text/javascript">
         var today = new Date();
         var dd = String(today.getDate()).padStart(2, '0');
         var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
         var yyyy = today.getFullYear();
-
         today = mm + '/' + dd + '/' + yyyy;
         document.getElementById("date").innerHTML = "Date: " + today
         document.getElementById("time").innerHTML = "Time: " + formatAMPM(new Date)
 
-
-
         function addRow() {
             var tableRef = document.getElementById('bill-table').getElementsByTagName('tbody')[0];
             $("#bill-table").find('tbody').append("<tr><td>" + (tableRef.rows.length + 1) + "</td><td><input class=\"itemids\" name=\"itemid[]\" onkeyup=\"searchDescription(this)\" type=\"text\"></td><td><input  onkeyup=\"searchId(this)\" name=\"description[]\" class=\"description\" type=\"text\"></td><td><input name=\"quantity[]\" onkeyup=\"updateAmount(this)\" type=\"number\"></td> <td><input type=\"hidden\" name=\"rate[]\" type=\"number\"><p class=\"text-center\"></p></td><td><input type=\"hidden\" name=\"amount[]\" type=\"number\"><p class=\"text-center\"></p></td></tr>");
-
         }
 
         function formatAMPM(date) {
@@ -297,12 +286,9 @@
             if (document.getElementById("easypaisa").checked || document.getElementById("bank").checked) {
                 document.getElementById("transactionnumberdiv").style.visibility = "visible"
                 document.getElementById("transactionnumber").required = true
-
             } else {
                 document.getElementById("transactionnumberdiv").style.visibility = "hidden"
                 document.getElementById("transactionnumber").required = false
-
-
             }
         }
 
@@ -334,7 +320,6 @@
             console.log("DONE");
         }
     </script>
-
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script> -->
@@ -342,35 +327,24 @@
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="controllers/auto.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
-
-
     <script>
         MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
         var data;
         var itemid;
         var description;
 
-
-
         function searchDescription(element, value) {
-
-
             let descriptionIndex;
             for (var i = 0; i < data[0].length; i++) {
                 if (value == undefined) {
-                    if (element.value == data[0][i])
-
-                    {
+                    if (element.value == data[0][i]) {
                         descriptionIndex = i;
                         break;
                     }
                 } else {
-                    if (value == data[0][i])
-
-                    {
+                    if (value == data[0][i]) {
                         descriptionIndex = i;
                         break;
                     }
@@ -381,43 +355,32 @@
                 element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.childNodes[0].value = data[3][descriptionIndex];
                 console.log(element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.childNodes);
                 element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = data[3][descriptionIndex];
-
             } else {
-
                 element.parentElement.nextElementSibling.childNodes[0].value = "";
                 element.parentElement.nextElementSibling.nextElementSibling.childNodes[0].value = "";
                 element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.childNodes[0].value = "";
                 element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = "";
                 element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.childNodes[0].value = "";
                 element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = "";
-
             }
         }
 
-
-
         function searchId(element, value) {
-
             let idIndex;
             for (var i = 0; i < data[0].length; i++) {
                 if (value == undefined) {
-                    if (element.value == data[1][i])
-
-                    {
+                    if (element.value == data[1][i]) {
                         idIndex = i;
                         break;
                     }
                 } else {
-                    if (value == data[1][i])
-
-                    {
+                    if (value == data[1][i]) {
                         idIndex = i;
                         break;
                     }
                 }
             }
             if (idIndex != undefined) {
-
                 element.parentElement.previousElementSibling.childNodes[0].value = data[0][idIndex];
                 element.parentElement.nextElementSibling.nextElementSibling.childNodes[0].value = data[3][idIndex];
                 element.parentElement.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = data[3][idIndex];
@@ -433,17 +396,12 @@
 
         function updateAmount(element) {
             value = element.parentElement.previousElementSibling.previousElementSibling.childNodes[0].value;
-
             let idIndex;
             for (var i = 0; i < data[0].length; i++) {
-
-                if (value == data[0][i])
-
-                {
+                if (value == data[0][i]) {
                     idIndex = i;
                     break;
                 }
-
             }
             allowed_quantity = data[2][idIndex];
             if (element.value > allowed_quantity) {
@@ -451,9 +409,7 @@
             } else {
                 let rate = element.parentElement.nextElementSibling.childNodes[0].value;
                 let amount = rate * element.value;
-
                 if (amount != 0) {
-
                     // console.log( element.parentElement.nextElementSibling.nextElementSibling.childNodes()[0].value=amount);
                     element.parentElement.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = amount;
                     element.parentElement.nextElementSibling.nextElementSibling.childNodes[0].value = amount
@@ -463,7 +419,6 @@
                     element.parentElement.nextElementSibling.nextElementSibling.childNodes[0].value = "";
                     //Set Total To Zero
                     calculateTotal()
-
                 }
             }
         }
@@ -478,12 +433,10 @@
             document.getElementsByName("total")[0].value = total;
             document.getElementById("grandtotal").getElementsByTagName("p")[0].innerHTML = "Grand Total: " + (Number(total) + Number(document.getElementsByName("remainingbalance")[0].value));
             document.getElementsByName("grandtotal")[0].value = Number(total) + Number(document.getElementsByName("remainingbalance")[0].value);
-
         }
 
         function setPreviousBalance() {
             document.getElementById("previousbalance").getElementsByTagName("p")[0].innerHTML = "Previous Balance: " + document.getElementsByName("remainingbalance")[0].value;
-
         }
 
         function setIndexes() {
@@ -491,28 +444,18 @@
             var input = document.getElementsByName('itemid[]');
             let idIndex;
             for (var i = 0; i < input.length; i++) {
-
-
                 for (var j = 0; j < data[0].length; j++) {
                     if (input[i].value != undefined) {
-                        if (input[i].value == data[0][j])
-
-                        {
+                        if (input[i].value == data[0][j]) {
                             idIndex = j;
                             indexes.push(idIndex);
                             break;
-
                         }
                     }
                 }
-
             }
             $('input:hidden[name=\'indexes[]\']').val(indexes);
-
-
             return true;
-
-
         }
 
         function func() {
@@ -533,14 +476,13 @@
                 },
                 datatype: 'JSON',
                 success: function(result) {
-                    
                     $.ajax({
                         type: 'get',
                         url: 'controllers/search.php',
                         dataType: 'json',
                         cache: false,
                         success: function(result) {
-                            data=result
+                            data = result
                             console.log("success")
                         }
                     });
@@ -553,7 +495,6 @@
             $('#confirmModal').modal('toggle');
         }
         $(document).ready(function() {
-
             $.ajax({
                 type: 'get',
                 url: 'controllers/search.php',
@@ -564,13 +505,11 @@
                     //MUTATION START
                     var observer = new MutationObserver(function(mutations, observer) {
                         // fired when a mutation occurs
-
                         try {
                             $(".itemids").autocomplete({
                                 source: data[0],
                                 html: true,
                                 response: function(event, ui) {
-
                                     // ui.content is the array that's about to be sent to the response callback.
                                     if (ui.content.length === 0) {
                                         var noResult = {
@@ -578,7 +517,6 @@
                                             label: "<button type=\"button\" class=\"btn btn-light btn-sm\" data-toggle=\"modal\" data-target=\"#exampleModal\" >Item not found, click to add</button>"
                                         };
                                         ui.content.push(noResult);
-
                                     } else {
                                         $("#empty-message").empty();
                                     }
@@ -592,7 +530,6 @@
                                 source: data[1],
                                 html: true,
                                 response: function(event, ui) {
-
                                     // ui.content is the array that's about to be sent to the response callback.
                                     if (ui.content.length === 0) {
                                         var noResult = {
@@ -600,7 +537,6 @@
                                             label: "<button type=\"button\" class=\"btn btn-light btn-sm\" data-toggle=\"modal\" data-target=\"#exampleModal\" >Item not found, click to add</button>"
                                         };
                                         ui.content.push(noResult);
-
                                     } else {
                                         $("#empty-message").empty();
                                     }
@@ -612,8 +548,6 @@
                         } catch (error) {
                             console.log(error);
                         }
-
-
                         // ...
                     });
                     observer.observe(document, {
@@ -628,7 +562,6 @@
                         source: data[0],
                         html: true,
                         response: function(event, ui) {
-
                             // ui.content is the array that's about to be sent to the response callback.
                             if (ui.content.length === 0) {
                                 var noResult = {
@@ -636,7 +569,6 @@
                                     label: "<button type=\"button\" class=\"btn btn-light btn-sm\" data-toggle=\"modal\" data-target=\"#exampleModal\" >Item not found, click to add</button>"
                                 };
                                 ui.content.push(noResult);
-
                             } else {
                                 $("#empty-message").empty();
                             }
@@ -649,7 +581,6 @@
                         source: data[1],
                         html: true,
                         response: function(event, ui) {
-
                             // ui.content is the array that's about to be sent to the response callback.
                             if (ui.content.length === 0) {
                                 var noResult = {
@@ -657,7 +588,6 @@
                                     label: "<button type=\"button\" class=\"btn btn-light btn-sm\" data-toggle=\"modal\" data-target=\"#exampleModal\" >Item not found, click to add</button>"
                                 };
                                 ui.content.push(noResult);
-
                             } else {
                                 $("#empty-message").empty();
                             }
@@ -667,10 +597,7 @@
                         }
                     });
                 },
-
             });
-
         });
     </script>
-
 </body>

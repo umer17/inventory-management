@@ -32,6 +32,12 @@ try {
         addtransaction();
     } else if (isset($_POST['addtransactioncustomer'])) {
         addtransactioncustomer();
+    } else if (isset($_POST['login'])) {
+        login();
+    }else if (isset($_POST['logout'])) {
+        logout();
+    }else if (isset($_POST['inventorypassword'])) {
+        inventorypassword();
     }
 } catch (PDOException $e) {
     echo "Connection failed: " . $e->getMessage();
@@ -532,4 +538,51 @@ function addtransactioncustomer()
     } else {
     }
 }
+function login()
+{
+    global $conn;
+    $username=$_POST['username'];
+    $password=$_POST['password'];
+    $stmt = $conn->prepare("SELECT username,password FROM users WHERE username=:username AND password =:password");
+    $stmt->execute([
+
+        'username' => $username,
+        'password' => $password,
+    ]);
+    if ($stmt->rowCount() == 0) {
+        $message = "login details are incorrect";
+        echo "<script type='text/javascript'>alert('$message');
+            window.history.go(-1);
+            </script>";
+    } else {
+
+        $_SESSION['logged_in'] = '1';
+        header("Location:../home.php");
+    }
+}
+function logout()
+{
+    $_SESSION['logged_in'] = '0';
+}
+function inventorypassword()
+{
+    global $conn;
+$username='Rizwan';
+    $password=$_POST['password'];
+    $stmt = $conn->prepare("SELECT username,password FROM inventorycred WHERE username=:username AND password =:password");
+    $stmt->execute([
+
+        'username' => $username,
+        'password' => $password,
+    ]);
+    if ($stmt->rowCount() == 0) {
+       
+        echo json_encode(false);
+    } else {
+    
+        echo json_encode(true);
+
+    }
+}
+
 $conn = null;
