@@ -1,3 +1,5 @@
+<?php session_start();
+    if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']=='1') { ?>
 <!doctype html>
 <html lang="en" class="h-100">
 
@@ -10,14 +12,13 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
     <!-- <link rel="stylesheet" href="styles/table.css"> -->
     
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.0/themes/smoothness/jquery-ui.css" />
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.9.0/themes/smoothness/jquery-ui.css" />
     <link rel="stylesheet" href="styles/global.css">
     <title>Bill New Customer</title>
 </head>
 
 <body class="h-100">
-<?php session_start();
-    if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']=='1') { ?>
+
     <!-- Modal Start-->
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -99,7 +100,7 @@
         }
     </script>
     <div class="m-2">
-            <a href="home.php" class="text-decoration-none">
+            <a href="index.php" class="text-decoration-none">
             <img src="images/home.png" class="text-center mx-auto  " alt="Logo" width="40" height="auto">
 <p class="font-weight-bold" style="font-size:0.8rem;color:black">HOME</p>
             </a></div>

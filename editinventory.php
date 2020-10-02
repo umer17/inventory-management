@@ -1,28 +1,29 @@
-<!doctype html>
-<html lang="en" class="h-100">
+<?php session_start();
+if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == '1') { ?>
+  <!doctype html>
+  <html lang="en" class="h-100">
 
-<head>
+  <head>
 
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <!-- Bootstrap CSS -->
+    <!-- Bootstrap CSS -->
 
-  <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type='text/css'>
-  <link rel="stylesheet" href="styles/search.css">
-  <link rel="stylesheet" href="styles/table.css">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-  <!-- <link rel="stylesheet" href="styles/table.css"> -->
-  <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.0/themes/smoothness/jquery-ui.css" />
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type='text/css'>
+    <link rel="stylesheet" href="styles/search.css">
+    <link rel="stylesheet" href="styles/table.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="styles/table.css"> -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.9.0/themes/smoothness/jquery-ui.css" />
 
-  <link rel="stylesheet" href="styles/global.css">
-  <title>Edit Inventory</title>
-</head>
+    <link rel="stylesheet" href="styles/global.css">
+    <title>Edit Inventory</title>
+  </head>
 
-<body class="h-100">
-  <?php session_start();
-  if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == '1') { ?>
+  <body class="h-100">
+
     <div class="container h-100">
       <div class="row h-100 justify-content-center align-items-center">
         <div class="col-10 col-md-10 col-lg-10">
@@ -50,9 +51,9 @@
           <!-- SECOND MODAL END-->
           <h1 class="text-center">Edit Inventory</h1>
           <div class="m-2">
-            <a href="home.php" class="text-decoration-none">
-            <img src="images/home.png" class="text-center mx-auto  " alt="Logo" width="40" height="auto">
-<p class="font-weight-bold" style="font-size:0.8rem;color:black">HOME</p>
+            <a href="index.php" class="text-decoration-none">
+              <img src="images/home.png" class="text-center mx-auto  " alt="Logo" width="40" height="auto">
+              <p class="font-weight-bold" style="font-size:0.8rem;color:black">HOME</p>
             </a></div>
           <div class="input-group mb-2 mt-5">
             <input type="text" class="form-control has-search description" onkeyup="checkemptybar(this)" placeholder="Search Item">
@@ -70,44 +71,6 @@
             <?php
 
             include "controllers/SimpleXLSX.php";
-            if ($xlsx = SimpleXLSX::parse('upload/inventory.xlsx')) {
-              if (isset($_GET['click'])) {
-                renderTable($_GET['click'], $xlsx);
-              } else { // echo count($xlsx->rows());
-
-                $pagecount = count($xlsx->rows()) / 100;
-                // echo ceil($pagecount);
-                echo '<table id="inventory"  class="table table-hover table-bordered"><tbody>';
-                $i = 0;
-
-                foreach ($xlsx->rows() as $elt) {
-                  if ($i == 0) {
-                    echo "<tr><th>Sr. No</th><th>" . $elt[0] . "</th><th>" . $elt[1] . "</th><th>" . $elt[2] . "</th><th>" . $elt[3] . "</th></tr>";
-                  } elseif ($i > 0 && $i > 100) {
-                    break;
-                  } else {
-                    echo "<tr><td>" . $i . "</td><td><input name='itemid[]' type=\"text\" value=\"" . $elt[0] . "\">" . "</td><td><input name='description[]' type=\"text\" value=\"" . $elt[1] . "\">" .  "</td><td><input name='quantity[]' type=\"number\" value=\"" . $elt[2] . "\"></td><td><input name='rate[]' type=\"number\" value=\"" . $elt[3] . "\"></td></tr>";
-                  }
-
-                  $i++;
-                }
-
-
-                echo '</tbody></table>';
-                echo    '<nav aria-label="...">';
-                echo '<ul class="pagination justify-content-center">';
-
-
-                for ($i = 0; $i < $pagecount; $i++) {
-                  echo '<li class="page-item ">';
-                  echo "<a  class=\"page-link\" onclick=' saveExcel(this)' href=\"editinventory.php?click=" . ($i + 1) . "\" >" . ($i + 1) . "</a>";
-                  echo '</li>';
-                }
-                echo '</ul> </nav>';
-              }
-            } else {
-              echo SimpleXLSX::parseError();
-            }
             function renderTable($number, $xlsx)
             {
               $loop_start = ($number * 100) - 99;
@@ -162,6 +125,45 @@
               echo '</ul>
         </nav>';
             }
+            if ($xlsx = SimpleXLSX::parse('upload/inventory.xlsx')) {
+              if (isset($_GET['click'])) {
+                renderTable($_GET['click'], $xlsx);
+              } else { // echo count($xlsx->rows());
+
+                $pagecount = count($xlsx->rows()) / 100;
+                // echo ceil($pagecount);
+                echo '<table id="inventory"  class="table table-hover table-bordered"><tbody>';
+                $i = 0;
+
+                foreach ($xlsx->rows() as $elt) {
+                  if ($i == 0) {
+                    echo "<tr><th>Sr. No</th><th>" . $elt[0] . "</th><th>" . $elt[1] . "</th><th>" . $elt[2] . "</th><th>" . $elt[3] . "</th></tr>";
+                  } elseif ($i > 0 && $i > 100) {
+                    break;
+                  } else {
+                    echo "<tr><td>" . $i . "</td><td><input name='itemid[]' type=\"text\" value=\"" . $elt[0] . "\">" . "</td><td><input name='description[]' type=\"text\" value=\"" . $elt[1] . "\">" .  "</td><td><input name='quantity[]' type=\"number\" value=\"" . $elt[2] . "\"></td><td><input name='rate[]' type=\"number\" value=\"" . $elt[3] . "\"></td></tr>";
+                  }
+
+                  $i++;
+                }
+
+
+                echo '</tbody></table>';
+                echo    '<nav aria-label="...">';
+                echo '<ul class="pagination justify-content-center">';
+
+
+                for ($i = 0; $i < $pagecount; $i++) {
+                  echo '<li class="page-item ">';
+                  echo "<a  class=\"page-link\" onclick=' saveExcel(this)' href=\"editinventory.php?click=" . ($i + 1) . "\" >" . ($i + 1) . "</a>";
+                  echo '</li>';
+                }
+                echo '</ul> </nav>';
+              }
+            } else {
+              echo SimpleXLSX::parseError();
+            }
+            
             ?>
           </div>
         </div>
@@ -169,14 +171,14 @@
     </div>
 
   <?php } else {
-    $message = 'You must login to see this page';
-    echo
-      "<script type='text/javascript'>
+  $message = 'You must login to see this page';
+  echo
+    "<script type='text/javascript'>
 
 alert('$message');
 window.location.href = 'login.php';	
             </script>";
-  } ?>
+} ?>
   <!-- Optional JavaScript -->
   <!-- jQuery first, then Popper.js, then Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -347,4 +349,4 @@ window.location.href = 'login.php';
 
     });
   </script>
-</body>
+  </body>

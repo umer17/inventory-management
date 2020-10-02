@@ -5,7 +5,7 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
     <nav class="navbar mb-5 navbar-expand-lg navbar-dark bg-dark ">
-    <a href="home.php"> <img src="images/logo.png" class="text-center mx-auto " alt="Logo" width="20%" height="auto">
+    <a href="index.php"> <img src="images/logo.png" class="text-center mx-auto " alt="Logo" width="20%" height="auto">
     </a>
        
         <div class="collapse navbar-collapse text-right float-right" id="navbarSupportedContent">

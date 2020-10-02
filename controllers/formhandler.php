@@ -1,20 +1,23 @@
 <?php
-
+session_start();
+include 'config.php';
 require '../vendor/autoload.php';
 date_default_timezone_set("Asia/Karachi");
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+?>
 
-session_start();
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "rizwan";
+<body></body>
+<?php
+// $servername = "localhost";
+// $username = "id15011618_root";
+// $password = "}8R~xB}b8e0jXD%7";
+// $dbname = "id15011618_rizwan";
 global $conn;
 $conn = null;
 try {
-    $conn = new PDO("mysql:host=$servername;port=3308;dbname=rizwan", $username, $password);
+    $conn = new PDO("mysql:host=$servername;port=3308;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     if (isset($_POST['generatenew'])) {
         generatenew();
@@ -34,61 +37,47 @@ try {
         addtransactioncustomer();
     } else if (isset($_POST['login'])) {
         login();
-    }else if (isset($_POST['logout'])) {
+    } else if (isset($_POST['logout'])) {
         logout();
-    }else if (isset($_POST['inventorypassword'])) {
+    } else if (isset($_POST['inventorypassword'])) {
         inventorypassword();
+    } else if (isset($_POST['editbill'])) {
+        generateexisting(true);
     }
 } catch (PDOException $e) {
     echo "Connection failed: " . $e->getMessage();
 }
 function generatenew()
 {
-    var_dump($_POST);
+
     $invoicenumber = getRandomString();
-    echo "INVOICE NUMBER: " . $invoicenumber;
-    echo "<br>";
+
     $date = date("m/d/Y");
     $time = date('h:i a');
     $accountid = $_POST["accountid"];
-    echo "Account ID: " . $accountid;
-    echo "<br>";
+
     $customername = $_POST['customername'];
-    echo "Customer Name:" . $customername;
-    echo "<br>";
+
     $transactiontype = $_POST['transactiontype'];
-    echo "Transaction Type: " . $transactiontype;
-    echo "<br>";
+
     $transactionnumber = $_POST['transactionnumber'];
-    echo "Transaction Number: " . $transactionnumber;
-    echo "<br>";
     $carton = $_POST['carton'];
-    echo "Carton: " . $carton;
-    echo "<br>";
+
     $bundle = $_POST['bundle'];
-    echo "Bundle: " . $bundle;
-    echo "<br>";
+
     $totalcartonbundle = $_POST['totalcartonbundle'];
-    echo "Total: " . $totalcartonbundle;
-    echo "<br>";
+
     $total = $_POST['total'];
-    echo "Total: " . $total;
-    echo "<br>";
+
     $previousbalance = $_POST['previousbalance'];
-    echo "Previous Balance: " . $previousbalance;
-    echo "<br>";
+
     $grandtotal = $_POST['grandtotal'];
-    echo "Grand Total: " . $grandtotal;
-    echo "<br>";
+
     $remainingbalance = $_POST['remainingbalance'];
-    echo "Remaining Balance: " . $remainingbalance;
-    echo "<br>";
     $amountpaid = $_POST['amountpaid'];
-    echo "Amount Paid: " . $amountpaid;
-    echo "<br>";
+
     $receivername = $_POST['receivername'];
-    echo "Receiver Name: " . $receivername;
-    echo "<br>";
+
     // var_dump($_POST);
     $spreadsheet = PhpOffice\PhpSpreadsheet\IOFactory::load("../upload/inventory.xlsx");
     $sheet = $spreadsheet->getActiveSheet();
@@ -115,7 +104,7 @@ function generatenew()
     if ($stmt->execute([
         'customername' => $customername,
         'accountid' => $accountid,
-        'remainingbalance' => ($grandtotal - $amountpaid)
+        'remainingbalance' => ((int)$grandtotal - (int)$amountpaid)
     ])) {
     } else {
         $message = "There was an error inserting data into customers table";
@@ -156,7 +145,24 @@ function generatenew()
             'amount' => $_POST["amount"][$i],
         ])) {
             if ($i == ($length - 1)) {
-                printPage($invoicenumber);
+                $stmt = $conn->prepare("INSERT INTO `transactioncustomer` (`invoicenumber`,`date`, `time`, `customername`, `accountid`, `previousbalance`, `amountpaid`, `bill`,`totalbill`, `remainingbalance`, `remarks`) VALUES (:invoicenumber, :date, :time, :customername, :accountid, :previousbalance, :amountpaid, :bill, :totalbill, :remainingbalance, :remarks)");
+                if ($stmt->execute([
+                    'invoicenumber' => $invoicenumber,
+                    'date' => $date,
+                    'time' => $time,
+                    'customername' => $customername,
+                    'accountid' => $accountid,
+                    'previousbalance' => $remainingbalance,
+                    'amountpaid' => $amountpaid,
+                    'bill' => $total,
+                    'totalbill' => $grandtotal,
+                    'remainingbalance' => ((int)$grandtotal - (int)$amountpaid),
+                    'remarks' => ''
+                ])) {
+                    printPage($invoicenumber);
+                } else {
+                    echo json_encode(false);
+                }
             }
         } else {
             $message = "There was an error inserting data into items table";
@@ -164,69 +170,64 @@ function generatenew()
                 </script>";
         }
     }
-
-    $stmt = $conn->prepare("INSERT INTO `transactioncustomer` (`date`, `time`, `customername`, `accountid`, `previousbalance`, `amountpaid`, `bill`,`totalbill`, `remainingbalance`) VALUES (:date, :time, :customername, :accountid, :previousbalance, :amountpaid, :bill, :totalbill, :remainingbalance)");
-    if ($stmt->execute([
-        'date' => $date,
-        'time' => $time,
-        'customername' => $customername,
-        'accountid' => $accountid,
-        'previousbalance' => $remainingbalance,
-        'amountpaid' => $amountpaid,
-        'bill' => $total,
-        'totalbill' => $grandtotal,
-        'remainingbalance' => ($grandtotal - $amountpaid)
-    ])) {
-        echo json_encode(true);
-    } else {
-        echo json_encode(false);
-    }
 }
-function generateexisting()
+function generateexisting($edit = false)
 {
-    var_dump($_POST);
-    $invoicenumber = getRandomString();
-    echo "INVOICE NUMBER: " . $invoicenumber;
-    echo "<br>";
+    global $conn;
+
     $date = date("m/d/Y");
     $time = date('h:i a');
-    echo $time;
+
     $accountid = $_POST["accountid"];
-    echo "Account ID: " . $accountid;
-    echo "<br>";
+
     $customername = $_POST['customername'];
-    echo "Customer Name:" . $customername;
-    echo "<br>";
+
     $transactiontype = $_POST['transactiontype'];
-    echo "Transaction Type: " . $transactiontype;
-    echo "<br>";
+
     $transactionnumber = $_POST['transactionnumber'];
-    echo "Transaction Number: " . $transactionnumber;
-    echo "<br>";
+
     $carton = $_POST['carton'];
-    echo "Carton: " . $carton;
-    echo "<br>";
+
     $bundle = $_POST['bundle'];
-    echo "Bundle: " . $bundle;
-    echo "<br>";
+
     $totalcartonbundle = $_POST['totalcartonbundle'];
-    echo "Total: " . $totalcartonbundle;
-    echo "<br>";
+
     $total = $_POST['total'];
-    echo "Total: " . $total;
-    echo "<br>";
+
     $previousbalance = $_POST['previousbalance'];
-    echo "Previous Balance: " . $previousbalance;
-    echo "<br>";
+
     $grandtotal = $_POST['grandtotal'];
-    echo "Grand Total: " . $grandtotal;
-    echo "<br>";
+
     $amountpaid = $_POST['amountpaid'];
-    echo "Amount Paid: " . $amountpaid;
-    echo "<br>";
+
     $receivername = $_POST['receivername'];
-    echo "Receiver Name: " . $receivername;
-    echo "<br>";
+
+    if ($edit == true) {
+        $invoicenumber = $_POST['invoicenumber'];
+        $stmt = $conn->prepare("DELETE FROM `items` WHERE `items`.`invoicenumber` = :invoicenumber");
+        if ($stmt->execute([
+            'invoicenumber' => $invoicenumber,
+        ])) {
+            $stmt = $conn->prepare("DELETE FROM `bills` WHERE `bills`.`invoicenumber` = :invoicenumber");
+            if ($stmt->execute([
+                'invoicenumber' => $invoicenumber,
+            ])) {
+                $stmt = $conn->prepare("DELETE FROM `transactioncustomer` WHERE `transactioncustomer`.`invoicenumber` = :invoicenumber");
+                if ($stmt->execute([
+                    'invoicenumber' => $invoicenumber,
+                ])) {
+                } else {
+                }
+            } else {
+            }
+        } else {
+            $message = "There was an error inserting data into bills table";
+            echo "<script type='text/javascript'>alert('$message');
+                    </script>";
+        }
+    } else {
+        $invoicenumber = getRandomString();
+    }
     // var_dump($_POST);
     $spreadsheet = PhpOffice\PhpSpreadsheet\IOFactory::load("../upload/inventory.xlsx");
     $sheet = $spreadsheet->getActiveSheet();
@@ -248,18 +249,18 @@ function generateexisting()
     //write it again to Filesystem with the same name (=replace)
     $writer = new Xlsx($spreadsheet);
     $writer->save('../upload/inventory.xlsx');
-    global $conn;
+
     $stmt = $conn->prepare("UPDATE `customers` SET `remainingbalance` = :amountpaid WHERE `customers`.`accountid` = :accountid");
     if ($stmt->execute([
         'accountid' => $accountid,
-        'amountpaid' => ($grandtotal - $amountpaid)
+        'amountpaid' => ((int)$grandtotal - (int)$amountpaid)
     ])) {
         $message = "Update  Successfully";
         // echo "<script type='text/javascript'>alert('$message');
         //     window.location.href='http://joblister/post_job.php';
         //     </script>";
-        echo "<script type='text/javascript'>alert('$message');
-                </script>";
+        // echo "<script type='text/javascript'>alert('$message');
+        //         </script>";
     } else {
         $message = "There was an error inserting data into bills table";
         echo "<script type='text/javascript'>alert('$message');
@@ -299,7 +300,24 @@ function generateexisting()
             'amount' => $_POST["amount"][$i],
         ])) {
             if ($i == ($length - 1)) {
-                printPage($invoicenumber);
+                $stmt = $conn->prepare("INSERT INTO `transactioncustomer` (`invoicenumber`,`date`, `time`, `customername`, `accountid`, `previousbalance`, `amountpaid`, `bill`,`totalbill`, `remainingbalance`, `remarks`) VALUES (:invoicenumber, :date, :time, :customername, :accountid, :previousbalance, :amountpaid, :bill, :totalbill, :remainingbalance, :remarks)");
+                if ($stmt->execute([
+                    'invoicenumber' => $invoicenumber,
+                    'date' => $date,
+                    'time' => $time,
+                    'customername' => $customername,
+                    'accountid' => $accountid,
+                    'previousbalance' => $previousbalance,
+                    'amountpaid' => $amountpaid,
+                    'bill' => $total,
+                    'totalbill' => $grandtotal,
+                    'remainingbalance' => ((int)$grandtotal - (int)$amountpaid),
+                    'remarks' => ''
+                ])) {
+                    printPage($invoicenumber);
+                } else {
+                    echo json_encode(false);
+                }
             }
         } else {
             $message = "There was an error inserting data into items table";
@@ -331,22 +349,7 @@ function generateexisting()
     //     echo json_encode(false);
     // }
 
-    $stmt = $conn->prepare("INSERT INTO `transactioncustomer` (`date`, `time`, `customername`, `accountid`, `previousbalance`, `amountpaid`, `bill`,`totalbill`, `remainingbalance`) VALUES (:date, :time, :customername, :accountid, :previousbalance, :amountpaid, :bill, :totalbill, :remainingbalance)");
-    if ($stmt->execute([
-        'date' => $date,
-        'time' => $time,
-        'customername' => $customername,
-        'accountid' => $accountid,
-        'previousbalance' => $previousbalance,
-        'amountpaid' => $amountpaid,
-        'bill' => $total,
-        'totalbill' => $grandtotal,
-        'remainingbalance' => ($grandtotal - $amountpaid)
-    ])) {
-        echo json_encode(true);
-    } else {
-        echo json_encode(false);
-    }
+
 }
 function additems()
 {
@@ -376,7 +379,7 @@ function additems()
 }
 function addsingleitem()
 {
-    var_dump($_POST);
+
     $spreadsheet = PhpOffice\PhpSpreadsheet\IOFactory::load("../upload/inventory.xlsx");
     $sheet = $spreadsheet->getActiveSheet();
     $row = $sheet->getHighestRow() + 1;
@@ -421,7 +424,7 @@ function printPage($invoicenumber)
 }
 function editexcel()
 {
-    var_dump($_POST);
+
     $indexes = $_POST['indexes'];
     $itemid = $_POST["itemid"];
     $description = $_POST["description"];
@@ -487,13 +490,13 @@ function addtransaction()
         'vendorid' => $vendorid,
         'previousbalance' => $previousbalance,
         'amountpaid' => $amountpaid,
-        'remainingbalance' => ($previousbalance - $amountpaid),
+        'remainingbalance' => ((int)$previousbalance - (int)$amountpaid),
         'remarks' => $remarks,
     ])) {
         $stmt = $conn->prepare("UPDATE `vendors` SET `remainingbalance` = :amountpaid WHERE `vendors`.`vendorid` = :accountid");
         if ($stmt->execute([
             'accountid' => $vendorid,
-            'amountpaid' => ($previousbalance - $amountpaid)
+            'amountpaid' => ((int)$previousbalance - (int)$amountpaid)
         ])) {
             echo json_encode(true);
         } else {
@@ -523,13 +526,13 @@ function addtransactioncustomer()
         'amountpaid' => $amountpaid,
         'bill' => $previousbalance,
         'totalbill' => $previousbalance,
-        'remainingbalance' => ($previousbalance - $amountpaid),
+        'remainingbalance' => ((int)$previousbalance - (int)$amountpaid),
         'remarks' => $remarks
     ])) {
         $stmt = $conn->prepare("UPDATE `customers` SET `remainingbalance` = :amountpaid WHERE `customers`.`accountid` = :accountid");
         if ($stmt->execute([
             'accountid' => $accountid,
-            'amountpaid' => ($previousbalance - $amountpaid)
+            'amountpaid' => ((int)$previousbalance - (int)$amountpaid)
         ])) {
             echo json_encode(true);
         } else {
@@ -541,8 +544,8 @@ function addtransactioncustomer()
 function login()
 {
     global $conn;
-    $username=$_POST['username'];
-    $password=$_POST['password'];
+    $username = $_POST['username'];
+    $password = $_POST['password'];
     $stmt = $conn->prepare("SELECT username,password FROM users WHERE username=:username AND password =:password");
     $stmt->execute([
 
@@ -557,7 +560,7 @@ function login()
     } else {
 
         $_SESSION['logged_in'] = '1';
-        header("Location:../home.php");
+        header("Location:../index.php");
     }
 }
 function logout()
@@ -567,8 +570,8 @@ function logout()
 function inventorypassword()
 {
     global $conn;
-$username='Rizwan';
-    $password=$_POST['password'];
+    $username = 'Rizwan';
+    $password = $_POST['password'];
     $stmt = $conn->prepare("SELECT username,password FROM inventorycred WHERE username=:username AND password =:password");
     $stmt->execute([
 
@@ -576,12 +579,11 @@ $username='Rizwan';
         'password' => $password,
     ]);
     if ($stmt->rowCount() == 0) {
-       
+
         echo json_encode(false);
     } else {
-    
-        echo json_encode(true);
 
+        echo json_encode(true);
     }
 }
 

@@ -81,7 +81,7 @@
           if (JSON.parse(result) == true) {
             $('#exampleModal').modal('hide');
             html=`<div class="m-2">
-    <a href="home.php" class="text-decoration-none">
+    <a href="index.php" class="text-decoration-none">
       <img src="images/home.png" class="text-center mx-auto  " alt="Logo" width="40" height="auto">
       <p class="font-weight-bold" style="font-size:0.8rem;color:black">HOME</p>
     </a></div>

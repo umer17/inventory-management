@@ -1,14 +1,15 @@
 <?php
 include "SimpleXLSX.php";
+include "config.php";
 if (isset($_POST['getcustomers'])) {
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "rizwan";
+    // $servername = "localhost";
+    // $username = "id15011618_root";
+    // $password = "}8R~xB}b8e0jXD%7";
+    // $dbname = "id15011618_rizwan";
     global $conn;
     $conn = null;
     try {
-        $conn = new PDO("mysql:host=$servername;port=3308;dbname=rizwan", $username, $password);
+        $conn = new PDO("mysql:host=$servername;port=3308;dbname=$dbname", $username, $password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         $stmt = $conn->prepare("SELECT * FROM customers");

@@ -1,3 +1,5 @@
+<?php session_start();
+    if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']=='1') { ?>
 <!doctype html>
 <html lang="en">
 
@@ -11,7 +13,7 @@
     <link rel="stylesheet" href="styles/search.css">
     <link rel="stylesheet" href="styles/global.css">
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type='text/css'>
-    <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.0/themes/smoothness/jquery-ui.css" />
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.9.0/themes/smoothness/jquery-ui.css" />
 
     <title>Customer Ledger</title>
 </head>
@@ -27,10 +29,9 @@
 
     $transactions = getcustomertransactions();
     ?>
-        <?php session_start();
-    if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']=='1') { ?>
+     
     <div class="m-2">
-            <a href="home.php" class="text-decoration-none">
+            <a href="index.php" class="text-decoration-none">
             <img src="images/home.png" class="text-center mx-auto  " alt="Logo" width="40" height="auto">
 <p class="font-weight-bold" style="font-size:0.8rem;color:black">HOME</p>
             </a></div>
@@ -224,6 +225,8 @@ window.location.href = 'login.php';
                 var totalpaid = 0;
                 var totalprevious = 0;
                 var totalremaining = 0;
+                var totalbill = 0;
+                var totaltotalbill=0;
                 var x = 0;
                 var html
                 html = `<table id=\"transactions\"  class=\"table table-hover table-bordered\"><tbody>
@@ -237,6 +240,9 @@ window.location.href = 'login.php';
                         totalpaid += Number(transactions[i]['amountpaid']);
                         totalprevious += Number(transactions[i]['previousbalance']);
                         totalremaining += Number(transactions[i]['remainingbalance']);
+                        totalbill += Number(transactions[i]['bill']);
+                        totaltotalbill += Number(transactions[i]['totalbill']);
+
                         html += `<tr><td>${x}</td><td>${transactions[i]['accountid']}</td>
                         <td>${transactions[i]['customername']}</td><td>${transactions[i]['date']}</td>
                         <td>${transactions[i]['time']}</td> <td>${transactions[i]['previousbalance']}</td>
@@ -247,7 +253,7 @@ window.location.href = 'login.php';
                 }
                 html+=`<tr><td colspan='5'><strong>Total: </strong></td>
                 <td><strong>${totalprevious}</strong></td>
-                <td></td><td></td>
+                <td><strong>${totalbill}</strong></td><td><strong>${totaltotalbill}</strong></td>
                 <td><strong>${totalpaid}</strong></td><td><strong>${totalremaining}</strong></td>
                 <td></td></tr>`
                 html += `</tbody></table>`;

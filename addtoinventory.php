@@ -1,3 +1,5 @@
+<?php session_start();
+    if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == '1') { ?>
 <!doctype html>
 <html lang="en" class="h-100">
 
@@ -14,8 +16,7 @@
 </head>
 
 <body class="h-100">
-    <?php session_start();
-    if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == '1') { ?>
+   
         <!-- SECOND MODAL -->
         <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -37,7 +38,7 @@
         </div>
         <!-- SECOND MODAL END-->
         <div class="m-2">
-            <a href="home.php" class="text-decoration-none">
+            <a href="index.php" class="text-decoration-none">
             <img src="images/home.png" class="text-center mx-auto  " alt="Logo" width="40" height="auto">
 <p class="font-weight-bold" style="font-size:0.8rem;color:black">HOME</p>
             </a></div>

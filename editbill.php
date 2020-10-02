@@ -1,258 +1,247 @@
 <?php session_start();
-    if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']=='1') { ?>
-<!doctype html>
-<html lang="en">
+if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == '1') { ?>
+  <!doctype html>
+  <html lang="en">
 
-<head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-  <link rel="stylesheet" href="styles/search.css">
-  <link rel="stylesheet" href="styles/global.css">
-  <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type='text/css'>
-  <link rel="stylesheet" href="https://code.jquery.com/ui/1.9.0/themes/smoothness/jquery-ui.css" />
-  <title>Bill Existing Customer</title>
-</head>
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="styles/search.css">
+    <link rel="stylesheet" href="styles/global.css">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type='text/css'>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.9.0/themes/smoothness/jquery-ui.css" />
+    <title>Edit Bill</title>
+  </head>
 
-<body class="h-100">
-
-  <!-- Modal Start-->
-  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Add Item</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form class="form-example table-responsive" onsubmit="func()" method="post">
-            <div class="form-group">
-              <label for="itemid1">Item ID:</label>
-              <input name="itemid" class="form-control" id="itemid1" placeholder="Item ID" required type="text">
-            </div>
-            <div class="form-group">
-              <label for="description1">Descritpion:</label>
-              <input name="description" class="form-control" id="description1" onkeyup="generateID(this)" placeholder="Description" required type="text">
-            </div>
-            <div class="form-group">
-              <label for="quantity1">Quantity:</label>
-              <input name="quantity" class="form-control" id="quantity1" placeholder="Quantity" required type="number">
-            </div>
-            <div class="form-group">
-              <label for="rate1">Rate:</label>
-              <input name="rate" class="form-control" id="rate1" placeholder="Rate" required type="number">
-            </div>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Add Item</button>
-        </div>
-        </form>
-      </div>
-    </div>
-  </div>
-  <!-- SECOND MODAL -->
-  <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Success</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <p class="text-center">Item Added Successfully</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary text-center" data-dismiss="modal">Ok</button>
+  <body class="h-100">
+    <?php
+    include 'controllers/functions.php';
+    // $bill = getbill('Okhf8GAvDOj0aNIL');
+    // $items = getitems('Okhf8GAvDOj0aNIL');
+    $bill = getbill($_POST['invoicenumber']);
+    $items = getitems($_POST['invoicenumber']);
+    ?>
+    <!-- Modal Start-->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Add Item</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form class="form-example table-responsive" onsubmit="func()" method="post">
+              <div class="form-group">
+                <label for="itemid1">Item ID:</label>
+                <input name="itemid" class="form-control" id="itemid1" placeholder="Item ID" required type="text">
+              </div>
+              <div class="form-group">
+                <label for="description1">Descritpion:</label>
+                <input name="description" class="form-control" id="description1" onkeyup="generateID(this)" placeholder="Description" required type="text">
+              </div>
+              <div class="form-group">
+                <label for="quantity1">Quantity:</label>
+                <input name="quantity" class="form-control" id="quantity1" placeholder="Quantity" required type="number">
+              </div>
+              <div class="form-group">
+                <label for="rate1">Rate:</label>
+                <input name="rate" class="form-control" id="rate1" placeholder="Rate" required type="number">
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Add Item</button>
+          </div>
+          </form>
         </div>
       </div>
     </div>
-  </div>
-  <!-- SECOND MODAL END-->
-  <script>
-    function generateID(element) {
-      let values = element.value.split(' ');
-      let finalString = "";
-      console.log(values);
-      // if(Array.isArray(values) && values.length && values[0]!="") {
-      values.forEach((item) => {
-        finalString += item.substring(0, 1).toUpperCase();
-        // element.parentElement.previousElementSibling.childNodes[0].value = item.substring(0,1);
-      });
-      document.getElementById("itemid1").value = finalString + makeid(3);
-      // }
-    }
-
-    function makeid(length) {
-      var result = '';
-      var characters = '0123456789';
-      var charactersLength = characters.length;
-      for (var i = 0; i < length; i++) {
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    <!-- SECOND MODAL -->
+    <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Success</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p class="text-center">Item Added Successfully</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary text-center" data-dismiss="modal">Ok</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- SECOND MODAL END-->
+    <script>
+      function generateID(element) {
+        let values = element.value.split(' ');
+        let finalString = "";
+        console.log(values);
+        // if(Array.isArray(values) && values.length && values[0]!="") {
+        values.forEach((item) => {
+          finalString += item.substring(0, 1).toUpperCase();
+          // element.parentElement.previousElementSibling.childNodes[0].value = item.substring(0,1);
+        });
+        document.getElementById("itemid1").value = finalString + makeid(3);
+        // }
       }
-      return result;
-    }
-  </script>
-  <!-- Modal End --><div class="m-2">
-            <a href="index.php" class="text-decoration-none">
-            <img src="images/home.png" class="text-center mx-auto  " alt="Logo" width="40" height="auto">
-<p class="font-weight-bold" style="font-size:0.8rem;color:black">HOME</p>
-            </a></div>
-  <div class="container h-100">
-    <div class="row h-100 justify-content-center align-items-center">
-      <div class="col-10 col-md-10 col-lg-10">
-        <!-- Form -->
-        <form class="form-example table-responsive" action="controllers/formhandler.php" method="post">
-          <input type="hidden" name="accountid" id="accountid" type="text">
-          <h1 class="text-center">Bill Existing Customer</h1>
-          <!-- Input fields -->
-          <div class="input-group mb-2 mt-5">
-            <input type="text" class="form-control searchbox" name="customername" placeholder="Search Customer">
-            <div class="input-group-append">
-              <button class="btn btn-secondary" type="button">
-                <i class="fa fa-search"></i>
-              </button>
-            </div>
-          </div>
-          <div class="form-group">
-            <label id="date" for="date">Date: </label>
-            <!-- Default unchecked -->
-            <div class="float-right">
-              <label for="transactiontype">Transaction: </label>
-              <div class="custom-control custom-radio d-inline">
-                <input type="radio" class="custom-control-input" id="bank" onclick="return toggleinput()" value="bank" name="transactiontype" checked>
-                <label class="custom-control-label" for="bank">Bank</label>
-              </div>
-              <!-- Default checked -->
-              <div class="custom-control custom-radio d-inline">
-                <input type="radio" class="custom-control-input" id="easypaisa" onclick="return toggleinput()" value="easypaisa" name="transactiontype">
-                <label class="custom-control-label" for="easypaisa">Easypaisa</label>
-              </div>
-              <div class="custom-control custom-radio d-inline">
-                <input type="radio" class="custom-control-input" id="cash" onclick="return toggleinput()" value="cash" name="transactiontype">
-                <label class="custom-control-label" for="cash">Cash</label>
-              </div>
-            </div>
-          </div>
-          <div class="form-group">
-            <label id="time" for="date">Time: </label>
-            <div id="transactionnumberdiv" class="float-right form-inline">
-              <label for="transactionnumber">Transaction Number: </label>
-              <input required class="form-control  ml-2" type="text" placeholder="Transaction Number" id="transactionnumber" name="transactionnumber">
-            </div>
-          </div>
-          <div class="form-inline mb-2">
-            <label for="receivername">Receiver Name:</label>
-            <input type="text" class="form-control ml-2  receivername" id="receivername" placeholder="Receiver Name" name="receivername">
-          </div>
-          <div class="form-inline">
-            <label for="carton">Carton: </label>
-            <input class="form-control ml-2" id="carton" type="number" onkeyup="getTotalCartons()" placeholder="Carton" name="carton">
-          </div>
-          <div class="form-inline mt-2">
-            <label for="bundle">Bundle: </label>
-            <input class="form-control ml-2" id="bundle" type="number" onkeyup="getTotalCartons()" placeholder="Bundle" name="bundle">
-          </div>
-          <div class="form-inline mt-2">
-            <label for="totalcartonbundle">Total: </label>
-            <input readonly class="form-control ml-2 mb-2" id="totalcartonbundle" type="text" name="totalcartonbundle">
-          </div>
-          <!-- TABLE START -->
-          <div class="table-responsive-sm">
-            <table id="bill-table" class="table table-hover table-bordered">
-              <thead>
-                <tr>
-                  <th>S. NO</th>
-                  <th>ITEM ID</th>
-                  <th>DESCRIPTION</th>
-                  <th>QUANTITY</th>
-                  <th>RATE</th>
-                  <th>AMOUNT</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>1</td>
-                  <td><input name="itemid[]" onkeyup="searchDescription(this)" class="itemids" required type="text"></td>
-                  <td><input name="description[]" onkeyup="searchId(this)" class="description" required type="text"></td>
-                  <td><input name="quantity[]" onkeyup="updateAmount(this)" required type="number"></td>
-                  <td><input type="hidden" name="rate[]" required type="number">
-                    <p class="text-center"></p>
-                  </td>
-                  <td><input type="hidden" name="amount[]" required type="number">
-                    <p class="text-center"></p>
-                  </td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td><input name="itemid[]" onkeyup="searchDescription(this)" class="itemids" type="text"></td>
-                  <td><input name="description[]" onkeyup="searchId(this)" class="description" type="text"></td>
-                  <td><input name="quantity[]" onkeyup="updateAmount(this)" type="number"></td>
-                  <td><input type="hidden" name="rate[]" type="number">
-                    <p class="text-center"></p>
-                  </td>
-                  <td><input type="hidden" name="amount[]" type="number">
-                    <p class="text-center"></p>
-                  </td>
-                </tr>
-                <tr>
-                  <td>3</td>
-                  <td><input name="itemid[]" onkeyup="searchDescription(this)" class="itemids" type="text"></td>
-                  <td><input name="description[]" onkeyup="searchId(this)" class="description" type="text"></td>
-                  <td><input name="quantity[]" onkeyup="updateAmount(this)" type="number"></td>
-                  <td><input type="hidden" name="rate[]" type="number">
-                    <p class="text-center"></p>
-                  </td>
-                  <td><input type="hidden" name="amount[]" type="number">
-                    <p class="text-center"></p>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <div class="form-group float-right">
-              <label class="d-block" id="total" for="total">
-                <p>Total: </p><input type="hidden" name="total" type="number">
-              </label>
-              <label class="d-block" for="previousbalance">
-                <p class="previousbalance">Previous Balance: </p><input type="hidden" id="previousbalance" name="previousbalance" type="number">
-              </label>
-              <label class="d-block" id="grandtotal" for="grandtotal">
-                <p>Grand Total: </p><input type="hidden" name="grandtotal" type="number">
-              </label>
-              <div class="form-inline mt-2">
-                <label for="amountpaid">Amount Paid: </label>
-                <input class="form-control ml-2 mb-2" id="amountpaid" type="number" name="amountpaid">
+
+      function makeid(length) {
+        var result = '';
+        var characters = '0123456789';
+        var charactersLength = characters.length;
+        for (var i = 0; i < length; i++) {
+          result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+        return result;
+      }
+    </script>
+    <!-- Modal End -->
+    <div class="m-2">
+      <a href="index.php" class="text-decoration-none">
+        <img src="images/home.png" class="text-center mx-auto  " alt="Logo" width="40" height="auto">
+        <p class="font-weight-bold" style="font-size:0.8rem;color:black">HOME</p>
+      </a></div>
+    <div class="container h-100">
+      <div class="row h-100 justify-content-center align-items-center">
+        <div class="col-10 col-md-10 col-lg-10">
+          <!-- Form -->
+          <form class="form-example table-responsive" action="controllers/formhandler.php" method="post">
+            <input type="hidden" name="accountid" id="accountid" type="text">
+            <h1 class="text-center">Edit Bill</h1>
+            <!-- Input fields -->
+
+            <div class="form-group">
+              <?php echo "<p><strong>Invoice Number:</strong> " . $_POST['invoicenumber'] . "</p><input type='hidden' id='invoicenumber' name='invoicenumber' type='text'value='" . $_POST['invoicenumber'] . "'>"; ?>
+              <?php echo "<p><strong>Customer Name:</strong> " .  $bill[0]['customername'] . "</p><input type='hidden' id='customername' name='customername' type='text' value='" . $bill[0]['customername'] . "'>"; ?>
+              <?php echo "<p><strong>Account ID:</strong> " .  $bill[0]['accountid'] . "</p><input type='hidden' id='accountid' name='accountid' type='text' value='" . $bill[0]['accountid'] . "'>"; ?>
+
+              <label id="date" for="date">Date: </label>
+              <!-- Default unchecked -->
+              <div class="float-right">
+                <label for="transactiontype">Transaction: </label>
+                <div class="custom-control custom-radio d-inline">
+                  <input type="radio" class="custom-control-input" id="bank" onclick="return toggleinput()" value="bank" name="transactiontype" checked>
+                  <label class="custom-control-label" for="bank">Bank</label>
+                </div>
+                <!-- Default checked -->
+                <div class="custom-control custom-radio d-inline">
+                  <input type="radio" class="custom-control-input" id="easypaisa" onclick="return toggleinput()" value="easypaisa" name="transactiontype">
+                  <label class="custom-control-label" for="easypaisa">Easypaisa</label>
+                </div>
+                <div class="custom-control custom-radio d-inline">
+                  <input type="radio" class="custom-control-input" id="cash" onclick="return toggleinput()" value="cash" name="transactiontype">
+                  <label class="custom-control-label" for="cash">Cash</label>
+                </div>
               </div>
             </div>
-            <div class=" mt-n3">
-              <button type="button" class="btn btn-primary btn-customized" onclick="return addRow()">+</button>
+            <div class="form-group">
+              <label id="time" for="date">Time: </label>
+              <div id="transactionnumberdiv" class="float-right form-inline">
+                <label for="transactionnumber">Transaction Number: </label>
+                <input required class="form-control  ml-2" type="text" placeholder="Transaction Number" id="transactionnumber" name="transactionnumber" value=<?php if ($bill[0]['transactiontype'] != "cash") {
+                                                                                                                                                                  echo json_encode($bill[0]['transactionnumber']);
+                                                                                                                                                                } ?>>
+              </div>
             </div>
-          </div>
-          <input type="hidden" name="indexes[]" type="number">
-          <!-- TABLE END -->
-          <div class="text-center">
-            <button type="submit" name="generateexisting" onclick="return setIndexes()" class="btn btn-primary btn-customized text-center">Generate Bill</button>
-            <!-- End input fields -->
-          </div>
-        </form>
-        <!-- Form end -->
+            <div class="form-inline mb-2">
+              <label for="receivername">Receiver Name:</label>
+              <input type="text" class="form-control ml-2  receivername" id="receivername" placeholder="Receiver Name" value=<?php echo $bill[0]['receivername']; ?> name="receivername">
+            </div>
+            <div class="form-inline">
+              <label for="carton">Carton: </label>
+              <input class="form-control ml-2" id="carton" type="number" onkeyup="getTotalCartons()" placeholder="Carton" value=<?php echo $bill[0]['carton']; ?> name="carton">
+            </div>
+            <div class="form-inline mt-2">
+              <label for="bundle">Bundle: </label>
+              <input class="form-control ml-2" id="bundle" type="number" onkeyup="getTotalCartons()" placeholder="Bundle" value=<?php echo $bill[0]['bundle']; ?> name="bundle">
+            </div>
+            <div class="form-inline mt-2">
+              <label for="totalcartonbundle">Total: </label>
+              <input readonly class="form-control ml-2 mb-2" id="totalcartonbundle" value=<?php echo $bill[0]['totalcartonbundle']; ?> type="text" name="totalcartonbundle">
+            </div>
+            <!-- TABLE START -->
+            <div class="table-responsive-sm">
+              <table id="bill-table" class="table table-hover table-bordered">
+                <thead>
+                  <tr>
+                    <th>S. NO</th>
+                    <th>ITEM ID</th>
+                    <th>DESCRIPTION</th>
+                    <th>QUANTITY</th>
+                    <th>RATE</th>
+                    <th>AMOUNT</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php
+                  for ($j = 0; $j < count($items); $j++) {
+
+                    echo "<tr>
+                      <td>" . ($j + 1) . "</td>
+                      <td><input name='itemid[]' onkeyup='searchDescription(this)' class='itemids' required type='text' value='" . $items[$j]['itemid'] . "'>"  . "</td>
+                      <td><input name='description[]' onkeyup='searchId(this)' class='description' required type='text' value='" . $items[$j]['description'] . "'>"  . "</td>
+                      <td><input name='quantity[]' onkeyup='updateAmount(this)'  required type='number' value='" . $items[$j]['quantity'] . "'>"  . "</td>
+                      <td><input type='hidden' name='rate[]' type='number' value='" . $items[$j]['rate'] . "'>
+                      <p class='text-center'>" . $items[$j]['rate'] . "</p></td>
+                      <td><input type='hidden' name='amount[]' type='number' value='" . $items[$j]['amount'] . "'>
+                      <p class='text-center'>" . $items[$j]['amount'] . "</p></td>
+                      </tr>";
+                  }
+                  ?>
+
+
+
+
+                </tbody>
+              </table>
+              <div class="form-group float-right">
+                <label class="d-block" id="total" for="total">
+                  <p>Total: <?php echo $bill[0]['total']; ?> </p><input type="hidden" name="total" type="number" value=<?php echo $bill[0]['total']; ?>>
+                </label>
+                <label class="d-block" for="previousbalance">
+                  <p class="previousbalance">Previous Balance: <?php echo $bill[0]['previousbalance']; ?> </p><input type="hidden" id="previousbalance" name="previousbalance" type="number" value=<?php echo $bill[0]['previousbalance']; ?>>
+                </label>
+                <label class="d-block" id="grandtotal" for="grandtotal">
+                  <p>Grand Total: <?php echo $bill[0]['grandtotal']; ?></p><input type="hidden" name="grandtotal" type="number" value=<?php echo $bill[0]['grandtotal']; ?>>
+                </label>
+                <div class="form-inline mt-2">
+                  <label for="amountpaid">Amount Paid: </label>
+                  <input class="form-control ml-2 mb-2" id="amountpaid" type="number" name="amountpaid" value=<?php echo $bill[0]['amountpaid']; ?>>
+                </div>
+              </div>
+              <div class=" mt-n3">
+                <button type="button" class="btn btn-primary btn-customized" onclick="return addRow()">+</button>
+              </div>
+            </div>
+            <input type="hidden" name="indexes[]" type="number">
+            <!-- TABLE END -->
+            <div class="text-center">
+              <button type="submit" name="editbill" onclick="return setIndexes()" class="btn btn-primary btn-customized text-center">Generate Bill</button>
+              <!-- End input fields -->
+            </div>
+          </form>
+          <!-- Form end -->
+        </div>
       </div>
     </div>
-  </div>
   <?php } else {
-        $message = 'You must login to see this page';
-        echo
-            "<script type='text/javascript'>
+  $message = 'You must login to see this page';
+  echo
+    "<script type='text/javascript'>
 
 alert('$message');
 window.location.href = 'login.php';	
             </script>";
-    } ?>
+} ?>
   <script type="text/javascript">
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
@@ -630,4 +619,4 @@ window.location.href = 'login.php';
       });
     });
   </script>
-</body>
+  </body>
