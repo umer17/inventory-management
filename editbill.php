@@ -187,9 +187,9 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == '1') { ?>
 
                     echo "<tr>
                       <td>" . ($j + 1) . "</td>
-                      <td><input name='itemid[]' onkeyup='searchDescription(this)' class='itemids' required type='text' value='" . $items[$j]['itemid'] . "'>"  . "</td>
-                      <td><input name='description[]' onkeyup='searchId(this)' class='description' required type='text' value='" . $items[$j]['description'] . "'>"  . "</td>
-                      <td><input name='quantity[]' onkeyup='updateAmount(this)'  required type='number' value='" . $items[$j]['quantity'] . "'>"  . "</td>
+                      <td><input name='itemid[]' onkeyup='searchDescription(this)' class='itemids'  type='text' value='" . $items[$j]['itemid'] . "'>"  . "</td>
+                      <td><input name='description[]' onkeyup='searchId(this)' class='description'  type='text' value='" . $items[$j]['description'] . "'>"  . "</td>
+                      <td><input name='quantity[]' onkeyup='updateAmount(this)'   type='number' value='" . $items[$j]['quantity'] . "'>"  . "</td>
                       <td><input type='hidden' name='rate[]' type='number' value='" . $items[$j]['rate'] . "'>
                       <p class='text-center'>" . $items[$j]['rate'] . "</p></td>
                       <td><input type='hidden' name='amount[]' type='number' value='" . $items[$j]['amount'] . "'>

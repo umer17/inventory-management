@@ -1,5 +1,4 @@
-<?php
-session_start();
+<?php session_start();
 include 'config.php';
 require '../vendor/autoload.php';
 date_default_timezone_set("Asia/Karachi");
@@ -8,7 +7,7 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 ?>
 
-<body></body>
+
 <?php
 // $servername = "localhost";
 // $username = "id15011618_root";
@@ -49,7 +48,7 @@ try {
 }
 function generatenew()
 {
-
+    
     $invoicenumber = getRandomString();
 
     $date = date("m/d/Y");
@@ -402,6 +401,7 @@ function getRandomString($length = 16)
 }
 function printPage($invoicenumber)
 {
+    echo "<body></body>";
     echo '<script src="https://code.jquery.com/jquery-1.12.4.js"></script>';
     echo '<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>';
     echo "<script>
@@ -560,7 +560,11 @@ function login()
     } else {
 
         $_SESSION['logged_in'] = '1';
-        header("Location:../index.php");
+        echo "<script type='text/javascript'>
+            window.location.href='../index.php';
+            </script>";
+
+        // header("Location:../index.php");
     }
 }
 function logout()

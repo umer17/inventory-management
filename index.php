@@ -64,6 +64,12 @@ session_start();
                              <a href="newvendor.php" class="d-inline mr-4"> <button type="button" name="newvendor" class="btn btn-outline-secondary  btn-customized text-center">NEW VENDOR</button></a>
                              <a href="vendortransaction.php" class="d-inline mr-4"> <button type="button" name="vendortransaction" class="btn btn-outline-secondary  btn-customized text-center">VENDOR TRANSACTION</button></a>
                          </div>
+                         <div class="category m-4 d-block">
+                             <h3>CLOSING</h3>
+
+                            
+                             <a href="closing.php" class="d-inline mr-4"> <button type="button" name="closing" class="btn btn-outline-secondary  btn-customized text-center">CLOSING</button></a>
+                         </div>
                      </div>
                      <!-- Form end -->
                  </div>

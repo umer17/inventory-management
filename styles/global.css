@@ -53,3 +53,19 @@ background: -webkit-linear-gradient(to bottom, #cce3e9, #eef1f3);  /* Chrome 10-
 /* html,body{
   height:100% !important;
 } */
+/* .date-p {
+  display:inline-block;
+  position: relative
+}
+.date-p:after {
+  font-family: 'FontAwesome';
+  content: '\fasd073';
+  position: absolute;
+  right: 6px;
+} */
+input.empty
+{  font-family: FontAwesome;
+  font-style: normal;
+  font-weight: normal;
+  text-decoration: inherit;
+}

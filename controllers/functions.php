@@ -1,5 +1,5 @@
 <?php
-    include 'config.php';
+include 'config.php';
 
 // $servername = "localhost";
 // $username = "id15011618_root";
@@ -57,7 +57,7 @@ function getitems($invoicenumber)
             $items[] = $row;
         }
     }
-    return($items);
+    return ($items);
 }
 function getvendors()
 {
@@ -84,7 +84,8 @@ function getvendornames()
         }
     }
     return $vendors;
-}function getcustomernames()
+}
+function getcustomernames()
 {
     global $conn;
     $stmt = $conn->prepare("SELECT `customername` FROM customers");
@@ -109,7 +110,8 @@ function getvendortransactions()
         }
     }
     return $transactions;
-}function getcustomertransactions()
+}
+function getcustomertransactions()
 {
     global $conn;
     $stmt = $conn->prepare("SELECT * FROM transactioncustomer");
@@ -134,4 +136,17 @@ function getcustomers()
         }
     }
     return $customers;
+}
+function getcustomertransactionsbydate($date)
+{
+    global $conn;
+    $stmt = $conn->prepare("SELECT * FROM transactioncustomer WHERE `transactioncustomer`.`date` = :date");
+    $transactions = array();
+    if ($stmt->execute(['date' => $date,])) {
+        // set the resulting array to associative
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $transactions[] = $row;
+        }
+    }
+    return $transactions;
 }
