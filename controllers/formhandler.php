@@ -74,6 +74,7 @@ function generatenew()
 
     $remainingbalance = $_POST['remainingbalance'];
     $amountpaid = $_POST['amountpaid'];
+    $discount = $_POST['discount'];
 
     $receivername = $_POST['receivername'];
 
@@ -85,11 +86,11 @@ function generatenew()
     $indexes = explode(",", $_POST["indexes"][0]);
     // print_r($indexes);
     $length = count($indexes);
-    for ($i = 0; $i < $length; $i++) {
-        $quantity = $sheet->getCell("C" . ($indexes[$i] + 2))->getValue();
-        $new_quantity = $quantity - $_POST["quantity"][$i];
-        $sheet->setCellValue("C" . ($indexes[$i] + 2), $new_quantity);
-    }
+    // for ($i = 0; $i < $length; $i++) {
+    //     $quantity = $sheet->getCell("C" . ($indexes[$i] + 2))->getValue();
+    //     $new_quantity = $quantity - $_POST["quantity"][$i];
+    //     $sheet->setCellValue("C" . ($indexes[$i] + 2), $new_quantity);
+    // }
     // //load spreadsheet
     // $spreadsheet = PhpOffice\PhpSpreadsheet\IOFactory::load("../upload/inventory.xlsx"); 
     // //change it
@@ -110,7 +111,7 @@ function generatenew()
         echo "<script type='text/javascript'>alert('$message');
             </script>";
     }
-    $stmt = $conn->prepare("INSERT INTO `bills` (`invoicenumber`, `date`, `time`, `accountid`, `customername`, `transactiontype`, `transactionnumber`, `carton`, `bundle`, `totalcartonbundle`, `total`, `previousbalance`, `grandtotal`, `amountpaid`, `receivername`) VALUES (:invoicenumber, :date, :time, :accountid, :customername, :transactiontype, :transactionnumber, :carton, :bundle, :totalcartonbundle, :total, :remainingbalance, :grandtotal, :amountpaid, :receivername)");
+    $stmt = $conn->prepare("INSERT INTO `bills` (`invoicenumber`, `date`, `time`, `accountid`, `customername`, `transactiontype`, `transactionnumber`, `carton`, `bundle`, `totalcartonbundle`, `total`, `previousbalance`, `grandtotal`, `amountpaid`, `receivername`, `discount`) VALUES (:invoicenumber, :date, :time, :accountid, :customername, :transactiontype, :transactionnumber, :carton, :bundle, :totalcartonbundle, :total, :remainingbalance, :grandtotal, :amountpaid, :receivername, :discount)");
     if ($stmt->execute([
         'invoicenumber' => $invoicenumber,
         'date' => $date,
@@ -127,6 +128,7 @@ function generatenew()
         'grandtotal' => $grandtotal,
         'amountpaid' => $amountpaid,
         'receivername' => $receivername,
+        'discount'=>$discount
     ])) {
     } else {
         $message = "There was an error inserting data into bills table";
@@ -198,6 +200,7 @@ function generateexisting($edit = false)
     $grandtotal = $_POST['grandtotal'];
 
     $amountpaid = $_POST['amountpaid'];
+    $discount = $_POST['discount'];
 
     $receivername = $_POST['receivername'];
 
@@ -235,11 +238,11 @@ function generateexisting($edit = false)
     $indexes = explode(",", $_POST["indexes"][0]);
     // print_r($indexes);
     $length = count($indexes);
-    for ($i = 0; $i < $length; $i++) {
-        $quantity = $sheet->getCell("C" . ($indexes[$i] + 2))->getValue();
-        $new_quantity = $quantity - $_POST["quantity"][$i];
-        $sheet->setCellValue("C" . ($indexes[$i] + 2), $new_quantity);
-    }
+    // for ($i = 0; $i < $length; $i++) {
+    //     $quantity = $sheet->getCell("C" . ($indexes[$i] + 2))->getValue();
+    //     $new_quantity = $quantity - $_POST["quantity"][$i];
+    //     $sheet->setCellValue("C" . ($indexes[$i] + 2), $new_quantity);
+    // }
     // //load spreadsheet
     // $spreadsheet = PhpOffice\PhpSpreadsheet\IOFactory::load("../upload/inventory.xlsx"); 
     // //change it
@@ -265,7 +268,7 @@ function generateexisting($edit = false)
         echo "<script type='text/javascript'>alert('$message');
                 </script>";
     }
-    $stmt = $conn->prepare("INSERT INTO `bills` (`invoicenumber`, `date`, `time`, `accountid`, `customername`, `transactiontype`, `transactionnumber`, `carton`, `bundle`, `totalcartonbundle`, `total`, `previousbalance`, `grandtotal`, `amountpaid`, `receivername`) VALUES (:invoicenumber, :date, :time, :accountid, :customername, :transactiontype, :transactionnumber, :carton, :bundle, :totalcartonbundle, :total, :previousbalance, :grandtotal, :amountpaid, :receivername)");
+    $stmt = $conn->prepare("INSERT INTO `bills` (`invoicenumber`, `date`, `time`, `accountid`, `customername`, `transactiontype`, `transactionnumber`, `carton`, `bundle`, `totalcartonbundle`, `total`, `previousbalance`, `grandtotal`, `amountpaid`, `receivername`, `discount`) VALUES (:invoicenumber, :date, :time, :accountid, :customername, :transactiontype, :transactionnumber, :carton, :bundle, :totalcartonbundle, :total, :previousbalance, :grandtotal, :amountpaid, :receivername, :discount)");
     if ($stmt->execute([
         'invoicenumber' => $invoicenumber,
         'date' => $date,
@@ -282,6 +285,7 @@ function generateexisting($edit = false)
         'grandtotal' => $grandtotal,
         'amountpaid' => $amountpaid,
         'receivername' => $receivername,
+        'discount' => $discount,
     ])) {
     } else {
         $message = "There was an error inserting data into bills table";
@@ -390,9 +394,9 @@ function addsingleitem()
     $writer = new Xlsx($spreadsheet);
     $writer->save('../upload/inventory.xlsx');
 }
-function getRandomString($length = 16)
+function getRandomString($length = 4)
 {
-    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $characters = '0123456789';
     $string = '';
     for ($i = 0; $i < $length; $i++) {
         $string .= $characters[mt_rand(0, strlen($characters) - 1)];

@@ -1,0 +1,4 @@
+@media all{.table,.table td, .table th{
+    border-width: 1px !important;
+    border-color: black !important;
+}}

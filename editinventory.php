@@ -106,7 +106,7 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == '1') { ?>
                 } elseif ($i > $loop_end) {
                   break;
                 } else {
-                  echo "<tr><td>" . $i . "</td><td><input name='itemid[]' type=\"text\" value=\"" . $elt[0] . "\">" . "</td><td><input name='description[]' type=\"text\" value=\"" . $elt[1] . "\">" .  "</td><td><input name='quantity[]' type=\"number\" value=\"" . $elt[2] . "\"></td><td><input name='rate[]' type=\"number\" value=\"" . $elt[3] . "\"></td></tr>";
+                  echo "<tr><td>" . $i . "</td><td><input name='itemid[]' type=\"text\" value=\"" . $elt[0] . "\">" . "</td><td><input name='description[]' type=\"text\" value=\"" . $elt[1] . "\">" .  "</td><td><input name='quantity[]' type=\"number\" value=\"" . $elt[2] . "\"></td><td><input name='rate[]' step=\"any\" type=\"number\" value=\"" . $elt[3] . "\"></td></tr>";
                 }
 
                 $i++;
@@ -141,7 +141,7 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == '1') { ?>
                   } elseif ($i > 0 && $i > 100) {
                     break;
                   } else {
-                    echo "<tr><td>" . $i . "</td><td><input name='itemid[]' type=\"text\" value=\"" . $elt[0] . "\">" . "</td><td><input name='description[]' type=\"text\" value=\"" . $elt[1] . "\">" .  "</td><td><input name='quantity[]' type=\"number\" value=\"" . $elt[2] . "\"></td><td><input name='rate[]' type=\"number\" value=\"" . $elt[3] . "\"></td></tr>";
+                    echo "<tr><td>" . $i . "</td><td><input name='itemid[]' type=\"text\" value=\"" . $elt[0] . "\">" . "</td><td><input name='description[]' type=\"text\" value=\"" . $elt[1] . "\">" .  "</td><td><input name='quantity[]' type=\"number\" value=\"" . $elt[2] . "\"></td><td><input name='rate[]' step='any' type=\"number\" value=\"" . $elt[3] . "\"></td></tr>";
                   }
 
                   $i++;
@@ -266,7 +266,7 @@ window.location.href = 'login.php';
       Rate
       </th></tr><tr><td>1</td><td><input name='itemid[]' type="text" value=${data[0][index]}></td><td><input name='description[]' type="text" value="${data[1][index]}"></td>
       <td><input name='quantity[]' type="number" value=${data[2][index]}></td>
-      <td><input name='rate[]' type="number" value=${data[3][index]}>
+      <td><input name='rate[]'  step='any' type="number" value=${data[3][index]}>
       </td></tr>`
         document.getElementsByClassName("pagination")[0].style.visibility = "hidden"
         originalids = [data[0][index]]

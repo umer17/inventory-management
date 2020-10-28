@@ -129,16 +129,16 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == '1') { ?>
               <div class="float-right">
                 <label for="transactiontype">Transaction: </label>
                 <div class="custom-control custom-radio d-inline">
-                  <input type="radio" class="custom-control-input" id="bank" onclick="return toggleinput()" value="bank" name="transactiontype" checked>
+                  <input type="radio" class="custom-control-input" id="bank" onclick="return toggleinput()" value="bank" name="transactiontype" >
                   <label class="custom-control-label" for="bank">Bank</label>
                 </div>
                 <!-- Default checked -->
                 <div class="custom-control custom-radio d-inline">
-                  <input type="radio" class="custom-control-input" id="easypaisa" onclick="return toggleinput()" value="easypaisa" name="transactiontype">
+                  <input type="radio" class="custom-control-input" id="easypaisa" onclick="return toggleinput()" value="easypaisa" name="transactiontype" >
                   <label class="custom-control-label" for="easypaisa">Easypaisa</label>
                 </div>
                 <div class="custom-control custom-radio d-inline">
-                  <input type="radio" class="custom-control-input" id="cash" onclick="return toggleinput()" value="cash" name="transactiontype">
+                  <input type="radio" class="custom-control-input" id="cash" onclick="return toggleinput()" value="cash" name="transactiontype" checked>
                   <label class="custom-control-label" for="cash">Cash</label>
                 </div>
               </div>
@@ -154,19 +154,19 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == '1') { ?>
             </div>
             <div class="form-inline mb-2">
               <label for="receivername">Receiver Name:</label>
-              <input type="text" class="form-control ml-2  receivername" id="receivername" placeholder="Receiver Name" value=<?php echo $bill[0]['receivername']; ?> name="receivername">
+              <input type="text" class="form-control ml-2  receivername" id="receivername" name="receivername" placeholder="Receiver Name" value=<?php echo $bill[0]['receivername']; ?> >
             </div>
             <div class="form-inline">
               <label for="carton">Carton: </label>
-              <input class="form-control ml-2" id="carton" type="number" onkeyup="getTotalCartons()" placeholder="Carton" value=<?php echo $bill[0]['carton']; ?> name="carton">
+              <input class="form-control ml-2" id="carton" type="number" onkeyup="getTotalCartons()" placeholder="Carton" value='<?php echo $bill[0]['carton']; ?>' name="carton">
             </div>
             <div class="form-inline mt-2">
               <label for="bundle">Bundle: </label>
-              <input class="form-control ml-2" id="bundle" type="number" onkeyup="getTotalCartons()" placeholder="Bundle" value=<?php echo $bill[0]['bundle']; ?> name="bundle">
+              <input class="form-control ml-2" id="bundle" type="number" onkeyup="getTotalCartons()" name="bundle" placeholder="Bundle" value=<?php echo $bill[0]['bundle']; ?> >
             </div>
             <div class="form-inline mt-2">
               <label for="totalcartonbundle">Total: </label>
-              <input readonly class="form-control ml-2 mb-2" id="totalcartonbundle" value=<?php echo $bill[0]['totalcartonbundle']; ?> type="text" name="totalcartonbundle">
+              <input readonly class="form-control ml-2 mb-2" id="totalcartonbundle"  type="text" name="totalcartonbundle" value=<?php echo $bill[0]['totalcartonbundle']; ?>>
             </div>
             <!-- TABLE START -->
             <div class="table-responsive-sm">
@@ -210,6 +210,10 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == '1') { ?>
                 <label class="d-block" for="previousbalance">
                   <p class="previousbalance">Previous Balance: <?php echo $bill[0]['previousbalance']; ?> </p><input type="hidden" id="previousbalance" name="previousbalance" type="number" value=<?php echo $bill[0]['previousbalance']; ?>>
                 </label>
+                <div class="form-inline mt-2">
+                <label for="discount">Discount: </label>
+                <input class="form-control ml-2 mb-2" id="discount" type="number" name="discount" onkeyup="calculateTotal()" value=<?php echo $bill[0]['discount']; ?>>
+              </div>
                 <label class="d-block" id="grandtotal" for="grandtotal">
                   <p>Grand Total: <?php echo $bill[0]['grandtotal']; ?></p><input type="hidden" name="grandtotal" type="number" value=<?php echo $bill[0]['grandtotal']; ?>>
                 </label>
@@ -383,10 +387,10 @@ window.location.href = 'login.php';
           break;
         }
       }
-      allowed_quantity = data[2][idIndex];
-      if (element.value > allowed_quantity) {
-        element.value = allowed_quantity;
-      } else {
+      // allowed_quantity = data[2][idIndex];
+      // if (element.value > allowed_quantity) {
+      //   element.value = allowed_quantity;
+      // } else {
         let rate = element.parentElement.nextElementSibling.childNodes[0].value;
         let amount = rate * element.value;
         if (amount != 0) {
@@ -400,7 +404,7 @@ window.location.href = 'login.php';
           //Set Total To Zero
           calculateTotal()
         }
-      }
+      // }
     }
 
     function calculateTotal() {
@@ -411,8 +415,8 @@ window.location.href = 'login.php';
       }
       document.getElementById("total").getElementsByTagName("p")[0].innerHTML = "Total: " + Number(total);
       document.getElementsByName("total")[0].value = total;
-      document.getElementById("grandtotal").getElementsByTagName("p")[0].innerHTML = "Grand Total: " + (Number(total) + Number(document.getElementById("previousbalance").value));
-      document.getElementsByName("grandtotal")[0].value = Number(total) + Number(document.getElementById("previousbalance").value);
+      document.getElementById("grandtotal").getElementsByTagName("p")[0].innerHTML = "Grand Total: " + ((Number(total) + Number(document.getElementById("previousbalance").value))-(Number(document.getElementById("discount").value)));
+      document.getElementsByName("grandtotal")[0].value = ((Number(total) + Number(document.getElementById("previousbalance").value))-(Number(document.getElementById("discount").value)));
     }
 
     function setPreviousBalance() {
@@ -481,6 +485,7 @@ window.location.href = 'login.php';
       $('#confirmModal').modal('toggle');
     }
     $(document).ready(function() {
+       toggleinput() ;
       $.ajax({
         type: 'post',
         url: 'controllers/search.php',

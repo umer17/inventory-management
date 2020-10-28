@@ -68,21 +68,21 @@
                                         <td><input name="itemid[]" required type="text"></td>
                                         <td><input name="description[]" onkeyup="generateID(this)" required type="text"></td>
                                         <td><input name="quantity[]" required type="number"></td>
-                                        <td><input name="rate[]" required type="number"></td>
+                                        <td><input name="rate[]" required type="number" step="any"></td>
                                     </tr>
                                     <tr>
                                         <td>2</td>
                                         <td><input name="itemid[]" type="text"></td>
                                         <td><input name="description[]" onkeyup="generateID(this)" type="text"></td>
                                         <td><input name="quantity[]" type="number"></td>
-                                        <td><input name="rate[]" type="number"></td>
+                                        <td><input name="rate[]" type="number" step="any"></td>
                                     </tr>
                                     <tr>
                                         <td>3</td>
                                         <td><input name="itemid[]" type="text"></td>
                                         <td><input name="description[]" onkeyup="generateID(this)" type="text"></td>
                                         <td><input name="quantity[]" type="number"></td>
-                                        <td><input name="rate[]" type="number"></td>
+                                        <td><input name="rate[]" type="number" step="any"></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -113,7 +113,7 @@ window.location.href = 'login.php';
         function addRow() {
             var tableRef = document.getElementById('bill-table').getElementsByTagName('tbody')[0];
             console.log(tableRef);
-            $("#bill-table").find('tbody').append("<tr><td>" + (tableRef.rows.length + 1) + "</td><td><input  name=\"itemid[]\" type=\"text\"></td><td><input  name=\"description[]\" onkeyup=\"generateID(this)\" type=\"text\"></td><td><input  name=\"quantity[]\" type=\"number\"></td> <td><input  name=\"rate[]\" type=\"number\"></td></tr>");
+            $("#bill-table").find('tbody').append("<tr><td>" + (tableRef.rows.length + 1) + "</td><td><input  name=\"itemid[]\" type=\"text\"></td><td><input  name=\"description[]\" onkeyup=\"generateID(this)\" type=\"text\"></td><td><input  name=\"quantity[]\" type=\"number\"></td> <td><input  name=\"rate[]\" type=\"number\" step=\"any\"></td></tr>");
         }
     </script>
     <!-- Optional JavaScript -->

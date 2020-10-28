@@ -45,7 +45,7 @@
                         </div>
                         <div class="form-group">
                             <label for="rate1">Rate:</label>
-                            <input name="rate" class="form-control" id="rate1" placeholder="Rate" required type="number">
+                            <input name="rate" step='any' class="form-control" id="rate1" placeholder="Rate" required type="number">
                         </div>
                 </div>
                 <div class="modal-footer">
@@ -130,7 +130,7 @@
                         <div class="float-right">
                             <label for="transactiontype">Transaction: </label>
                             <div class="custom-control custom-radio d-inline">
-                                <input type="radio" class="custom-control-input" id="bank" onclick="return toggleinput()" value="bank" name="transactiontype" checked>
+                                <input type="radio" class="custom-control-input" id="bank" onclick="return toggleinput()" value="bank" name="transactiontype" >
                                 <label class="custom-control-label" for="bank">Bank</label>
                             </div>
                             <!-- Default checked -->
@@ -139,7 +139,7 @@
                                 <label class="custom-control-label" for="easypaisa">Easypaisa</label>
                             </div>
                             <div class="custom-control custom-radio d-inline">
-                                <input type="radio" class="custom-control-input" id="cash" onclick="return toggleinput()" value="cash" name="transactiontype">
+                                <input type="radio" class="custom-control-input" id="cash" onclick="return toggleinput()" value="cash" name="transactiontype" checked>
                                 <label class="custom-control-label" for="cash">Cash</label>
                             </div>
                         </div>
@@ -153,7 +153,7 @@
                     </div>
                     <div class="form-inline mb-2">
                         <label for="receivername">Receiver Name:</label>
-                        <input required type="text" class="form-control ml-2  receivername" id="receivername" placeholder="Receiver Name" name="receivername">
+                        <input  type="text" class="form-control ml-2  receivername" id="receivername" placeholder="Receiver Name" name="receivername">
                     </div>
                     <div class="form-inline">
                         <label for="carton">Carton: </label>
@@ -226,6 +226,10 @@
                             <label class="d-block" id="previousbalance" for="previousbalance">
                                 <p>Previous Balance: </p><input type="hidden" name="previousbalance" type="number">
                             </label>
+                            <div class="form-inline mt-2">
+                <label for="discount">Discount: </label>
+                <input class="form-control ml-2 mb-2" id="discount" type="number" name="discount" onkeyup="calculateTotal()">
+              </div>
                             <label class="d-block" id="grandtotal" for="grandtotal">
                                 <p>Grand Total: </p><input type="hidden" name="grandtotal" type="number">
                             </label>
@@ -404,10 +408,10 @@ window.location.href = 'login.php';
                     break;
                 }
             }
-            allowed_quantity = data[2][idIndex];
-            if (element.value > allowed_quantity) {
-                element.value = allowed_quantity;
-            } else {
+            // allowed_quantity = data[2][idIndex];
+            // if (element.value > allowed_quantity) {
+            //     element.value = allowed_quantity;
+            // } else {
                 let rate = element.parentElement.nextElementSibling.childNodes[0].value;
                 let amount = rate * element.value;
                 if (amount != 0) {
@@ -421,7 +425,7 @@ window.location.href = 'login.php';
                     //Set Total To Zero
                     calculateTotal()
                 }
-            }
+            // }
         }
 
         function calculateTotal() {
@@ -432,8 +436,8 @@ window.location.href = 'login.php';
             }
             document.getElementById("total").getElementsByTagName("p")[0].innerHTML = "Total: " + Number(total);
             document.getElementsByName("total")[0].value = total;
-            document.getElementById("grandtotal").getElementsByTagName("p")[0].innerHTML = "Grand Total: " + (Number(total) + Number(document.getElementsByName("remainingbalance")[0].value));
-            document.getElementsByName("grandtotal")[0].value = Number(total) + Number(document.getElementsByName("remainingbalance")[0].value);
+            document.getElementById("grandtotal").getElementsByTagName("p")[0].innerHTML = "Grand Total: " + ((Number(total) + Number(document.getElementsByName("remainingbalance")[0].value))-(Number(document.getElementById("discount").value)));
+      document.getElementsByName("grandtotal")[0].value = ((Number(total) + Number(document.getElementsByName("remainingbalance")[0].value))-(Number(document.getElementById("discount").value)));
         }
 
         function setPreviousBalance() {
@@ -496,6 +500,7 @@ window.location.href = 'login.php';
             $('#confirmModal').modal('toggle');
         }
         $(document).ready(function() {
+            toggleinput() ;
             $.ajax({
                 type: 'get',
                 url: 'controllers/search.php',

@@ -69,3 +69,7 @@ input.empty
   font-weight: normal;
   text-decoration: inherit;
 }
+tr.noborder
+{
+  border: none;
+}

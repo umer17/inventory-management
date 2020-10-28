@@ -10,24 +10,26 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == '1') { ?>
 
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-        <link rel="stylesheet" href="styles/global.css">
+        <link rel="stylesheet" href="styles/tableborder.css">
         <title>Bill</title>
+        <style></style>
     </head>
 
-    <body>
+    <body style="font-size:15px">
 
-        <div class="m-2">
+        <div class="m-2 d-print-none">
             <a href="index.php" class="text-decoration-none">
+
                 <img src="images/home.png" class="text-center mx-auto  " alt="Logo" width="40" height="auto">
                 <p class="font-weight-bold" style="font-size:0.8rem;color:black">HOME</p>
             </a>
-           
+
 
         </div>
         <div class="container h-100">
             <div class="row h-100 justify-content-center align-items-center">
-                <div class="col-10 col-md-10 col-lg-10">
-                <button type="button" onclick="editbill()" class="btn btn-primary">Edit Bill</button>
+                <div class="col-12 col-md-12 col-lg-12">
+
                     <?php
                     include 'controllers/functions.php';
                     // $bill = getbill('Okhf8GAvDOj0aNIL');
@@ -40,53 +42,70 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == '1') { ?>
                     $numberofitems = count($items);
                     $pages = ceil($numberofitems / 5);
                     $item = 0;
-                    for ($i = 0; $i < $pages; $i++) {
-                        echo ' <div class="row align-items-center text-center h-100"> 
-                    <img src="images/logo.png" class="text-center mx-auto " alt="Logo" width="300" height="100">
+                    // for ($i = 0; $i < $pages; $i++) {
+
+                    echo "<div class='align-items-center row w-100 text-center col-12' >";
+
+
+                    echo "<div style='flex:1'>";
+                    echo "<p><strong>Invoice Number: " . $_POST['invoicenumber'] . "</strong></p>";
+                    echo "<p><strong>Date: " . $bill[0]['date'] . ", " . $bill[0]['time'] . "</strong></p>";
+                    // echo "<p><strong>Time: </strong>" . $bill[0]['time'] . "</p>";
+                    // echo "<p><strong>Received By: </strong>" . $bill[0]['receivername'] . "</p>";
+                    echo "</div>";
+
+
+
+                    echo ' <div style="flex:1" class="row align-items-center  text-center h-100">
+                    <img src="images/logo.png" class="text-center mx-auto " alt="Logo" width="120" height="60">
                     <!-- <h1 class="text-center">Invoice</h1> -->
                 </div>';
-                        echo "<div >";
-                        echo "<div class='float-left'>";
-                        echo "<p><strong>Invoice Number:</strong> " . $_POST['invoicenumber'] . "</p>";
-                        echo "<p><strong>Date: </strong>" . $bill[0]['date'] . "</p>";
-                        echo "<p><strong>Time: </strong>" . $bill[0]['time'] . "</p>";
-                        echo "<p><strong>Account ID: </strong>" . $bill[0]['accountid'] . "</p>";
-                        echo "<p><strong>Title: </strong>" . $bill[0]['customername'] . "</p>";
-                        echo "<p><strong>Received By: </strong>" . $bill[0]['receivername'] . "</p>";
-                        echo "</div>";
-                        echo "<div class='float-right' style='page-break-after: always'>";
-                        echo "<p ><strong>Transaction Type: </strong>" . $bill[0]['transactiontype'] . "</p>";
-                        if ($bill[0]['transactiontype'] != "cash") {
-                            echo "<p><strong>Transaction Number: </strong>" . $bill[0]['transactionnumber'] . "</p>";
-                        }
-                        echo "<p ><strong>Carton: </strong>" . $bill[0]['carton'] . "</p>";
-                        echo "<p ><strong>Bundle: </strong>" . $bill[0]['bundle'] . "</p>";
-                        echo "<p ><strong>Total: </strong>" . $bill[0]['totalcartonbundle'] . "</p>";
-                        echo "</div>";
-                        echo "</div>";
-                        echo "<div>";
-                        echo '<table id="bills"  class="table table-hover table-bordered"><tbody>';
-                        echo "<tr><th>S. NO</th><th>" . "ITEM ID" . "</th><th>" . "DESCRIPTION" . "</th><th>" . "QTY" . "</th><th>" . "RATE" . "</th><th>AMOUNT</th></tr>";
-                        $totalquantity = 0;
-                        for ($j = 0; $j < 5; $j++) {
-                            if ($item < count($items)) {
-                                echo "<tr><td>" . ($item + 1) . "</td><td>" . $items[$item]['itemid'] .  "</td><td>" . $items[$item]['description']  .  "</td><td>" . $items[$item]['quantity'] . "</td><td>" . $items[$item]['rate'] . "</td><td>" . $items[$item]['amount'] . "</td></tr>";
-                                $totalquantity += $items[$item]['quantity'];
-                                $item += 1;
-                            }
-                        }
-                        echo "<tr><td colspan='3' class='border-right-0'>Total: </td><td colspan='3' class='border-left-0'>" . $totalquantity . "</td></tr>";
-                        echo '</tbody></table>';
-                        echo "</div>";
-                        if ($i + 1 != $pages) {
-                            echo '<div class="pagebreak"></div>';
+
+
+                    echo "<div style='flex:1'>";
+                    echo "<p><strong>Account ID: " . $bill[0]['accountid'] . " </strong></p>";
+
+                    // echo "<p ><strong>Transaction Type: </strong>" . $bill[0]['transactiontype'] . "</p>";
+                    // if ($bill[0]['transactiontype'] != "cash") {
+                    //     echo "<p><strong>Transaction Number: </strong>" . $bill[0]['transactionnumber'] . "</p>";
+                    // }
+                    echo "<p><strong>Title: " . $bill[0]['customername'] . "</strong></p>";
+
+                    // echo "<p ><strong>Carton: </strong>" . $bill[0]['carton'] . "</p>";
+                    // echo "<p ><strong>Bundle: </strong>" . $bill[0]['bundle'] . "</p>";
+                    // echo "<p ><strong>Total: </strong>" . $bill[0]['totalcartonbundle'] . "</p>";
+                    echo "</div>";
+                    echo "</div>";
+
+                    echo "<div>";
+                    echo '<div class="align-items-center text-center"><button  type="button" onclick="editbill()" class="btn d-print-none  btn-primary">Edit Bill</button> </div>';
+
+                    echo '<table id="bills"  class="table table-sm table-hover table-bordered"><tbody>';
+                    echo "<tr ><th >S. NO</th><th >" . "ITEM ID" . "</th><th >" . "DESCRIPTION" . "</th><th >" . "QTY" . "</th><th>" . "RATE" . "</th><th >AMOUNT</th></tr>";
+                    $totalquantity = 0;
+                    for ($j = 0; $j < $numberofitems; $j++) {
+                        // if ($item < count($items)) {
+                        if ($items[$j]['itemid'] != '') {
+                            echo "<tr ><td ><strong>" . ($j + 1) . "</strong></td><td ><strong>" . $items[$j]['itemid'] .  "</strong></td><td ><strong>" . strtoupper($items[$j]['description'])  .  "</strong></td><td ><strong>" . $items[$j]['quantity'] . "</strong></td><td ><strong>" . $items[$j]['rate'] . "</strong></td><td ><strong>" . $items[$j]['amount'] . "</strong></td></tr>";
+                            $totalquantity += $items[$j]['quantity'];
+                            // $j += 1;
+                            // }
                         }
                     }
-                    echo "<div class='float-right '>";
-                    echo "<p ><strong>Total: </strong>" . $bill[0]['total'] . "</p>";
-                    echo "<p ><strong>Previous Balance: </strong>" . $bill[0]['previousbalance'] . "</p>";
-                    echo "<p ><strong>Grand Total: </strong>" . $bill[0]['grandtotal'] . "</p>";
-                    echo "<p ><strong>Amount Paid: </strong>" . $bill[0]['amountpaid'] . "</p>";
+                    echo "<tr><td colspan='3'><strong>Total: </td><td colspan='3' ></strong><strong>" . $totalquantity . "</strong></td></tr>";
+                    echo '</tbody></table>';
+                    echo "</div>";
+                    // if ($i + 1 != $pages) {
+                    //     echo '<div class="pagebreak"></div>';
+                    // }
+                    // }
+                    echo "<div class='float-right  '>";
+                    echo "<strong class='ml-2'>Total: " . $bill[0]['total'] . '</strong><br>';
+                    echo "<strong class='ml-2'>Previous Balance: " . $bill[0]['previousbalance'] . '</strong><br>';
+                    echo "<strong class='ml-2'>Discount: " . $bill[0]['discount'] . '</strong><br>';
+                    echo "<strong class='ml-2'>Grand Total: " . $bill[0]['grandtotal'] . '</strong><br>';
+                    echo "<strong class='ml-2'>Amount Paid: " . $bill[0]['amountpaid'] . '</strong><br>';
+                    echo "<strong class='ml-2'>Remaining Balance: " . strval($bill[0]['grandtotal'] - $bill[0]['amountpaid']) . '</strong><br>';
                     echo "</div>";
                     ?>
                     <!-- </div> -->
@@ -124,22 +143,22 @@ window.location.href = 'login.php';
         }
 
         function editbill() {
-        
-        var payload = {
-            invoicenumber: <?php echo json_encode($_POST['invoicenumber'])?>,
-        };
-        var form = document.createElement('form');
-        form.style.visibility = 'hidden';
-        form.method = 'POST';
-        form.action = 'editbill.php';
-        $.each(Object.keys(payload), function(index, key) {
-            var input = document.createElement('input');
-            input.name = key;
-            input.value = payload[key];
-            form.appendChild(input)
-        });
-        document.body.appendChild(form);
-        form.submit();
-   
-    }
+
+            var payload = {
+                invoicenumber: <?php echo json_encode($_POST['invoicenumber']) ?>,
+            };
+            var form = document.createElement('form');
+            form.style.visibility = 'hidden';
+            form.method = 'POST';
+            form.action = 'editbill.php';
+            $.each(Object.keys(payload), function(index, key) {
+                var input = document.createElement('input');
+                input.name = key;
+                input.value = payload[key];
+                form.appendChild(input)
+            });
+            document.body.appendChild(form);
+            form.submit();
+
+        }
     </script>

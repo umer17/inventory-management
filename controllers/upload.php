@@ -22,6 +22,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         // Verify MYME type of the file
         if(in_array($filetype, $mimes)){
             // Check whether file exists before uploading it
+            move_uploaded_file($_FILES["excel"]["tmp_name"], "../upload/" . "inventory.".$ext);
             echo "<script type='text/javascript'>alert('Your file was uploaded SUCCESSFULLY');
             window.location.href='../importinventory.php';
         </script>";
