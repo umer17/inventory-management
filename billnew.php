@@ -186,7 +186,7 @@
                                     <td><input name="itemid[]" onkeyup="searchDescription(this)" class="itemids" required type="text"></td>
                                     <td><input name="description[]" onkeyup="searchId(this)" class="description" required type="text"></td>
                                     <td><input name="quantity[]" onkeyup="updateAmount(this)" required type="number"></td>
-                                    <td><input type="hidden" name="rate[]" required type="number">
+                                    <td><input onkeyup="updateFromRate(this)" name="rate[]" required type="number">
                                         <p class="text-center"></p>
                                     </td>
                                     <td><input type="hidden" name="amount[]" required type="number">
@@ -198,7 +198,7 @@
                                     <td><input name="itemid[]" onkeyup="searchDescription(this)" class="itemids" type="text"></td>
                                     <td><input name="description[]" onkeyup="searchId(this)" class="description" type="text"></td>
                                     <td><input name="quantity[]" onkeyup="updateAmount(this)" type="number"></td>
-                                    <td><input type="hidden" name="rate[]" type="number">
+                                    <td><input onkeyup="updateFromRate(this)" name="rate[]" type="number">
                                         <p class="text-center"></p>
                                     </td>
                                     <td><input type="hidden" name="amount[]" type="number">
@@ -210,7 +210,7 @@
                                     <td><input name="itemid[]" onkeyup="searchDescription(this)" class="itemids" type="text"></td>
                                     <td><input name="description[]" onkeyup="searchId(this)" class="description" type="text"></td>
                                     <td><input name="quantity[]" onkeyup="updateAmount(this)" type="number"></td>
-                                    <td><input type="hidden" name="rate[]" type="number">
+                                    <td><input onkeyup="updateFromRate(this)" name="rate[]" type="number">
                                         <p class="text-center"></p>
                                     </td>
                                     <td><input type="hidden" name="amount[]" type="number">
@@ -273,9 +273,16 @@ window.location.href = 'login.php';
 
         function addRow() {
             var tableRef = document.getElementById('bill-table').getElementsByTagName('tbody')[0];
-            $("#bill-table").find('tbody').append("<tr><td>" + (tableRef.rows.length + 1) + "</td><td><input class=\"itemids\" name=\"itemid[]\" onkeyup=\"searchDescription(this)\" type=\"text\"></td><td><input  onkeyup=\"searchId(this)\" name=\"description[]\" class=\"description\" type=\"text\"></td><td><input name=\"quantity[]\" onkeyup=\"updateAmount(this)\" type=\"number\"></td> <td><input type=\"hidden\" name=\"rate[]\" type=\"number\"><p class=\"text-center\"></p></td><td><input type=\"hidden\" name=\"amount[]\" type=\"number\"><p class=\"text-center\"></p></td></tr>");
+            $("#bill-table").find('tbody').append("<tr><td>" + (tableRef.rows.length + 1) + "</td><td><input class=\"itemids\" name=\"itemid[]\" onkeyup=\"searchDescription(this)\" type=\"text\"></td><td><input  onkeyup=\"searchId(this)\" name=\"description[]\" class=\"description\" type=\"text\"></td><td><input name=\"quantity[]\" onkeyup=\"updateAmount(this)\" type=\"number\"></td> <td><input onkeyup='updateFromRate(this)' name=\"rate[]\" type=\"number\"><p class=\"text-center\"></p></td><td><input type=\"hidden\" name=\"amount[]\" type=\"number\"><p class=\"text-center\"></p></td></tr>");
         }
-
+        function updateFromRate(element) {
+      rate = element.value;
+      quantity = element.parentElement.previousElementSibling.childNodes[0].value;
+      amount = rate * quantity;
+      element.parentElement.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = amount;
+      element.parentElement.nextElementSibling.childNodes[0].value = amount;
+      calculateTotal();
+    }
         function formatAMPM(date) {
             var hours = date.getHours();
             var minutes = date.getMinutes();
@@ -359,12 +366,12 @@ window.location.href = 'login.php';
                 element.parentElement.nextElementSibling.childNodes[0].value = data[1][descriptionIndex];
                 element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.childNodes[0].value = data[3][descriptionIndex];
                 console.log(element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.childNodes);
-                element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = data[3][descriptionIndex];
+                // element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = data[3][descriptionIndex];
             } else {
                 element.parentElement.nextElementSibling.childNodes[0].value = "";
                 element.parentElement.nextElementSibling.nextElementSibling.childNodes[0].value = "";
                 element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.childNodes[0].value = "";
-                element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = "";
+                // element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = "";
                 element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.childNodes[0].value = "";
                 element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = "";
             }
@@ -388,12 +395,12 @@ window.location.href = 'login.php';
             if (idIndex != undefined) {
                 element.parentElement.previousElementSibling.childNodes[0].value = data[0][idIndex];
                 element.parentElement.nextElementSibling.nextElementSibling.childNodes[0].value = data[3][idIndex];
-                element.parentElement.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = data[3][idIndex];
+                // element.parentElement.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = data[3][idIndex];
             } else {
                 element.parentElement.previousElementSibling.childNodes[0].value = "";
                 element.parentElement.nextElementSibling.childNodes[0].value = "";
                 element.parentElement.nextElementSibling.nextElementSibling.childNodes[0].value = "";
-                element.parentElement.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = "";
+                // element.parentElement.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = "";
                 element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.childNodes[0].value = "";
                 element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = "";
             }
