@@ -18,7 +18,7 @@ try {
 function getbills()
 {
     global $conn;
-    $stmt = $conn->prepare("SELECT * FROM bills");
+    $stmt = $conn->prepare("SELECT * FROM bills   order by `date` DESC, `time` DESC");
     $bills = array();
     if ($stmt->execute()) {
         // set the resulting array to associative
@@ -48,7 +48,7 @@ function getitems($invoicenumber)
 {
     global $conn;
     $items = array();
-    $stmt = $conn->prepare("SELECT * FROM `items` WHERE `items`.`invoicenumber` = :invoicenumber");
+    $stmt = $conn->prepare("SELECT * FROM `items` WHERE `items`.`invoicenumber` = :invoicenumber order by `description`");
     if ($stmt->execute([
         'invoicenumber' => $invoicenumber,
     ])) {
@@ -101,7 +101,7 @@ function getcustomernames()
 function getvendortransactions()
 {
     global $conn;
-    $stmt = $conn->prepare("SELECT * FROM transactions");
+    $stmt = $conn->prepare("SELECT * FROM transactions   order by `date` DESC, `time` DESC");
     $transactions = array();
     if ($stmt->execute()) {
         // set the resulting array to associative
@@ -114,7 +114,7 @@ function getvendortransactions()
 function getcustomertransactions()
 {
     global $conn;
-    $stmt = $conn->prepare("SELECT * FROM transactioncustomer");
+    $stmt = $conn->prepare("SELECT * FROM transactioncustomer   order by `date` DESC, `time` DESC");
     $transactions = array();
     if ($stmt->execute()) {
         // set the resulting array to associative
