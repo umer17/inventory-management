@@ -278,8 +278,8 @@ window.location.href = 'login.php';
       rate = element.value;
       quantity = element.parentElement.previousElementSibling.childNodes[0].value;
       amount = rate * quantity;
-      element.parentElement.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = amount.toFixed(2);
-      element.parentElement.nextElementSibling.childNodes[0].value = amount.toFixed(2);
+      element.parentElement.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = parseFloat(amount.toFixed(2));
+      element.parentElement.nextElementSibling.childNodes[0].value = parseFloat(amount.toFixed(2));
       calculateTotal();
     }
 
@@ -418,8 +418,8 @@ window.location.href = 'login.php';
       let amount = rate * element.value;
       if (amount != 0) {
         // console.log( element.parentElement.nextElementSibling.nextElementSibling.childNodes()[0].value=amount);
-        element.parentElement.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = amount.toFixed(2);
-        element.parentElement.nextElementSibling.nextElementSibling.childNodes[0].value = amount.toFixed(2);
+        element.parentElement.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = parseFloat(amount.toFixed(2));
+        element.parentElement.nextElementSibling.nextElementSibling.childNodes[0].value = parseFloat(amount.toFixed(2));
         calculateTotal();
       } else {
         element.parentElement.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = "";
@@ -436,10 +436,10 @@ window.location.href = 'login.php';
       for (var i = 0; i < values.length; i++) {
         total += Number(values[i].value);
       }
-      document.getElementById("total").getElementsByTagName("p")[0].innerHTML = "Total: " + Number(total).toFixed(2);
-      document.getElementsByName("total")[0].value = total.toFixed(2);
-      document.getElementById("grandtotal").getElementsByTagName("p")[0].innerHTML = "Grand Total: " + ((Number(total).toFixed(2) + Number(document.getElementById("previousbalance").value)) - (Number(document.getElementById("discount").value)));
-      document.getElementsByName("grandtotal")[0].value = ((Number(total).toFixed(2) + Number(document.getElementById("previousbalance").value)) - (Number(document.getElementById("discount").value)));
+      document.getElementById("total").getElementsByTagName("p")[0].innerHTML = "Total: " + parseFloat(Number(total).toFixed(2));
+      document.getElementsByName("total")[0].value = parseFloat(total.toFixed(2));
+      document.getElementById("grandtotal").getElementsByTagName("p")[0].innerHTML = "Grand Total: " + parseFloat(((parseFloat(Number(total).toFixed(2)) + Number(document.getElementById("previousbalance").value)) - (Number(document.getElementById("discount").value))).toFixed(2));
+      document.getElementsByName("grandtotal")[0].value = parseFloat(((parseFloat(Number(total).toFixed(2)) + Number(document.getElementById("previousbalance").value)) - (Number(document.getElementById("discount").value))).toFixed(2));
     }
 
     function setPreviousBalance() {
@@ -447,8 +447,8 @@ window.location.href = 'login.php';
     }
 
     function setCustomer(index) {
-      document.getElementById("previousbalance").value = data2[2][index];
-      document.getElementsByClassName("previousbalance")[0].innerHTML = "Previous Balance: " + data2[2][index];
+      document.getElementById("previousbalance").value = parseFloat(parseFloat(data2[2][index]).toFixed(2));
+      document.getElementsByClassName("previousbalance")[0].innerHTML = "Previous Balance: " + parseFloat(parseFloat(data2[2][index]).toFixed(2));
       document.getElementById("accountid").value = data2[1][index];
     }
 
