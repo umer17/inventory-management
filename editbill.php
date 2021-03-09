@@ -129,12 +129,12 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == '1') { ?>
               <div class="float-right">
                 <label for="transactiontype">Transaction: </label>
                 <div class="custom-control custom-radio d-inline">
-                  <input type="radio" class="custom-control-input" id="bank" onclick="return toggleinput()" value="bank" name="transactiontype" >
+                  <input type="radio" class="custom-control-input" id="bank" onclick="return toggleinput()" value="bank" name="transactiontype">
                   <label class="custom-control-label" for="bank">Bank</label>
                 </div>
                 <!-- Default checked -->
                 <div class="custom-control custom-radio d-inline">
-                  <input type="radio" class="custom-control-input" id="easypaisa" onclick="return toggleinput()" value="easypaisa" name="transactiontype" >
+                  <input type="radio" class="custom-control-input" id="easypaisa" onclick="return toggleinput()" value="easypaisa" name="transactiontype">
                   <label class="custom-control-label" for="easypaisa">Easypaisa</label>
                 </div>
                 <div class="custom-control custom-radio d-inline">
@@ -148,13 +148,13 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == '1') { ?>
               <div id="transactionnumberdiv" class="float-right form-inline">
                 <label for="transactionnumber">Transaction Number: </label>
                 <input required class="form-control  ml-2" type="text" placeholder="Transaction Number" id="transactionnumber" name="transactionnumber" value=<?php if ($bill[0]['transactiontype'] != "cash") {
-                                                                                                                                                                  echo json_encode($bill[0]['transactionnumber']);
-                                                                                                                                                                } ?>>
+                                                                                                                                                                echo json_encode($bill[0]['transactionnumber']);
+                                                                                                                                                              } ?>>
               </div>
             </div>
             <div class="form-inline mb-2">
               <label for="receivername">Receiver Name:</label>
-              <input type="text" class="form-control ml-2  receivername" id="receivername" name="receivername" placeholder="Receiver Name" value=<?php echo $bill[0]['receivername']; ?> >
+              <input type="text" class="form-control ml-2  receivername" id="receivername" name="receivername" placeholder="Receiver Name" value=<?php echo $bill[0]['receivername']; ?>>
             </div>
             <div class="form-inline">
               <label for="carton">Carton: </label>
@@ -162,11 +162,11 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == '1') { ?>
             </div>
             <div class="form-inline mt-2">
               <label for="bundle">Bundle: </label>
-              <input class="form-control ml-2" id="bundle" type="number" onkeyup="getTotalCartons()" name="bundle" placeholder="Bundle" value=<?php echo $bill[0]['bundle']; ?> >
+              <input class="form-control ml-2" id="bundle" type="number" onkeyup="getTotalCartons()" name="bundle" placeholder="Bundle" value=<?php echo $bill[0]['bundle']; ?>>
             </div>
             <div class="form-inline mt-2">
               <label for="totalcartonbundle">Total: </label>
-              <input readonly class="form-control ml-2 mb-2" id="totalcartonbundle"  type="text" name="totalcartonbundle" value=<?php echo $bill[0]['totalcartonbundle']; ?>>
+              <input readonly class="form-control ml-2 mb-2" id="totalcartonbundle" type="text" name="totalcartonbundle" value=<?php echo $bill[0]['totalcartonbundle']; ?>>
             </div>
             <!-- TABLE START -->
             <div class="table-responsive-sm">
@@ -190,8 +190,8 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == '1') { ?>
                       <td><input name='itemid[]' onkeyup='searchDescription(this)' class='itemids'  type='text' value='" . $items[$j]['itemid'] . "'>"  . "</td>
                       <td><input name='description[]' onkeyup='searchId(this)' class='description'  type='text' value='" . $items[$j]['description'] . "'>"  . "</td>
                       <td><input name='quantity[]' onkeyup='updateAmount(this)'   type='number' value='" . $items[$j]['quantity'] . "'>"  . "</td>
-                      <td><input type='hidden' name='rate[]' type='number' value='" . $items[$j]['rate'] . "'>
-                      <p class='text-center'>" . $items[$j]['rate'] . "</p></td>
+                      <td><input  name='rate[]' step='any' onkeyup='updateFromRate(this)' type='number' value='" . $items[$j]['rate'] . "'>
+                      </td>
                       <td><input type='hidden' name='amount[]' type='number' value='" . $items[$j]['amount'] . "'>
                       <p class='text-center'>" . $items[$j]['amount'] . "</p></td>
                       </tr>";
@@ -211,9 +211,9 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == '1') { ?>
                   <p class="previousbalance">Previous Balance: <?php echo $bill[0]['previousbalance']; ?> </p><input type="hidden" id="previousbalance" name="previousbalance" type="number" value=<?php echo $bill[0]['previousbalance']; ?>>
                 </label>
                 <div class="form-inline mt-2">
-                <label for="discount">Discount: </label>
-                <input class="form-control ml-2 mb-2" id="discount" type="number" name="discount" onkeyup="calculateTotal()" value=<?php echo $bill[0]['discount']; ?>>
-              </div>
+                  <label for="discount">Discount: </label>
+                  <input class="form-control ml-2 mb-2" id="discount" type="number" name="discount" onkeyup="calculateTotal()" value=<?php echo $bill[0]['discount']; ?>>
+                </div>
                 <label class="d-block" id="grandtotal" for="grandtotal">
                   <p>Grand Total: <?php echo $bill[0]['grandtotal']; ?></p><input type="hidden" name="grandtotal" type="number" value=<?php echo $bill[0]['grandtotal']; ?>>
                 </label>
@@ -257,7 +257,16 @@ window.location.href = 'login.php';
 
     function addRow() {
       var tableRef = document.getElementById('bill-table').getElementsByTagName('tbody')[0];
-      $("#bill-table").find('tbody').append("<tr><td>" + (tableRef.rows.length + 1) + "</td><td><input class=\"itemids\" name=\"itemid[]\" onkeyup=\"searchDescription(this)\" type=\"text\"></td><td><input  onkeyup=\"searchId(this)\" name=\"description[]\" class=\"description\" type=\"text\"></td><td><input name=\"quantity[]\" onkeyup=\"updateAmount(this)\" type=\"number\"></td> <td><input type=\"hidden\" name=\"rate[]\" type=\"number\"><p class=\"text-center\"></p></td><td><input type=\"hidden\" name=\"amount[]\" type=\"number\"><p class=\"text-center\"></p></td></tr>");
+      $("#bill-table").find('tbody').append("<tr><td>" + (tableRef.rows.length + 1) + "</td><td><input class=\"itemids\" name=\"itemid[]\" onkeyup=\"searchDescription(this)\" type=\"text\"></td><td><input  onkeyup=\"searchId(this)\" name=\"description[]\" class=\"description\" type=\"text\"></td><td><input name=\"quantity[]\" onkeyup=\"updateAmount(this)\" type=\"number\"></td> <td><input type=\"hidden\" onkeyup=\"updateFromRate(this)\" step='any' name=\"rate[]\" type=\"number\"><p class=\"text-center\"></p></td><td><input type=\"hidden\" name=\"amount[]\" type=\"number\"><p class=\"text-center\"></p></td></tr>");
+    }
+
+    function updateFromRate(element) {
+      rate = element.value;
+      quantity = element.parentElement.previousElementSibling.childNodes[0].value;
+      amount = rate * quantity;
+      element.parentElement.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = amount;
+      element.parentElement.nextElementSibling.childNodes[0].value = amount;
+      calculateTotal();
     }
 
     function formatAMPM(date) {
@@ -338,12 +347,12 @@ window.location.href = 'login.php';
         element.parentElement.nextElementSibling.childNodes[0].value = data[1][descriptionIndex];
         element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.childNodes[0].value = data[3][descriptionIndex];
         console.log(element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.childNodes);
-        element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = data[3][descriptionIndex];
+        // element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = data[3][descriptionIndex];
       } else {
         element.parentElement.nextElementSibling.childNodes[0].value = "";
         element.parentElement.nextElementSibling.nextElementSibling.childNodes[0].value = "";
         element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.childNodes[0].value = "";
-        element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = "";
+        // element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = "";
         element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.childNodes[0].value = "";
         element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = "";
       }
@@ -367,12 +376,12 @@ window.location.href = 'login.php';
       if (idIndex != undefined) {
         element.parentElement.previousElementSibling.childNodes[0].value = data[0][idIndex];
         element.parentElement.nextElementSibling.nextElementSibling.childNodes[0].value = data[3][idIndex];
-        element.parentElement.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = data[3][idIndex];
+        // element.parentElement.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = data[3][idIndex];
       } else {
         element.parentElement.previousElementSibling.childNodes[0].value = "";
         element.parentElement.nextElementSibling.childNodes[0].value = "";
         element.parentElement.nextElementSibling.nextElementSibling.childNodes[0].value = "";
-        element.parentElement.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = "";
+        // element.parentElement.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = "";
         element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.childNodes[0].value = "";
         element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = "";
       }
@@ -391,19 +400,19 @@ window.location.href = 'login.php';
       // if (element.value > allowed_quantity) {
       //   element.value = allowed_quantity;
       // } else {
-        let rate = element.parentElement.nextElementSibling.childNodes[0].value;
-        let amount = rate * element.value;
-        if (amount != 0) {
-          // console.log( element.parentElement.nextElementSibling.nextElementSibling.childNodes()[0].value=amount);
-          element.parentElement.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = amount;
-          element.parentElement.nextElementSibling.nextElementSibling.childNodes[0].value = amount
-          calculateTotal();
-        } else {
-          element.parentElement.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = "";
-          element.parentElement.nextElementSibling.nextElementSibling.childNodes[0].value = "";
-          //Set Total To Zero
-          calculateTotal()
-        }
+      let rate = element.parentElement.nextElementSibling.childNodes[0].value;
+      let amount = rate * element.value;
+      if (amount != 0) {
+        // console.log( element.parentElement.nextElementSibling.nextElementSibling.childNodes()[0].value=amount);
+        element.parentElement.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = amount;
+        element.parentElement.nextElementSibling.nextElementSibling.childNodes[0].value = amount
+        calculateTotal();
+      } else {
+        element.parentElement.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = "";
+        element.parentElement.nextElementSibling.nextElementSibling.childNodes[0].value = "";
+        //Set Total To Zero
+        calculateTotal()
+      }
       // }
     }
 
@@ -415,8 +424,8 @@ window.location.href = 'login.php';
       }
       document.getElementById("total").getElementsByTagName("p")[0].innerHTML = "Total: " + Number(total);
       document.getElementsByName("total")[0].value = total;
-      document.getElementById("grandtotal").getElementsByTagName("p")[0].innerHTML = "Grand Total: " + ((Number(total) + Number(document.getElementById("previousbalance").value))-(Number(document.getElementById("discount").value)));
-      document.getElementsByName("grandtotal")[0].value = ((Number(total) + Number(document.getElementById("previousbalance").value))-(Number(document.getElementById("discount").value)));
+      document.getElementById("grandtotal").getElementsByTagName("p")[0].innerHTML = "Grand Total: " + ((Number(total) + Number(document.getElementById("previousbalance").value)) - (Number(document.getElementById("discount").value)));
+      document.getElementsByName("grandtotal")[0].value = ((Number(total) + Number(document.getElementById("previousbalance").value)) - (Number(document.getElementById("discount").value)));
     }
 
     function setPreviousBalance() {
@@ -485,7 +494,7 @@ window.location.href = 'login.php';
       $('#confirmModal').modal('toggle');
     }
     $(document).ready(function() {
-       toggleinput() ;
+      toggleinput();
       $.ajax({
         type: 'post',
         url: 'controllers/search.php',

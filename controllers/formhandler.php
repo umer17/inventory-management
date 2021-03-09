@@ -16,7 +16,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 global $conn;
 $conn = null;
 try {
-    $conn = new PDO("mysql:host=$servername;port=3308;dbname=$dbname", $username, $password);
+    $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     if (isset($_POST['generatenew'])) {
         generatenew();
@@ -136,6 +136,8 @@ function generatenew()
             </script>";
     }
     for ($i = 0; $i < $length; $i++) {
+        if($_POST["itemid"][$i]!='')
+        {
         $stmt = $conn->prepare("INSERT INTO `items` (`invoicenumber`, `itemid`, `description`,`quantity`,`rate`,`amount`) VALUES (:invoicenumber, :itemid, :description, :quantity, :rate, :amount)");
         if ($stmt->execute([
             'invoicenumber' => $invoicenumber,
@@ -145,33 +147,34 @@ function generatenew()
             'rate' => $_POST["rate"][$i],
             'amount' => $_POST["amount"][$i],
         ])) {
-            if ($i == ($length - 1)) {
-                $stmt = $conn->prepare("INSERT INTO `transactioncustomer` (`invoicenumber`,`date`, `time`, `customername`, `accountid`, `previousbalance`, `amountpaid`, `bill`,`totalbill`, `remainingbalance`, `remarks`) VALUES (:invoicenumber, :date, :time, :customername, :accountid, :previousbalance, :amountpaid, :bill, :totalbill, :remainingbalance, :remarks)");
-                if ($stmt->execute([
-                    'invoicenumber' => $invoicenumber,
-                    'date' => $date,
-                    'time' => $time,
-                    'customername' => $customername,
-                    'accountid' => $accountid,
-                    'previousbalance' => $remainingbalance,
-                    'amountpaid' => $amountpaid,
-                    'bill' => $total,
-                    'totalbill' => $grandtotal,
-                    'remainingbalance' => ((int)$grandtotal - (int)$amountpaid),
-                    'remarks' => ''
-                ])) {
-                    printPage($invoicenumber);
-                } else {
-                    echo json_encode(false);
-                }
-            }
+            
         } else {
             $message = "There was an error inserting data into items table";
             echo "<script type='text/javascript'>alert('$message');
                 </script>";
+        }}
+        if ($i == ($length - 1)) {
+            $stmt = $conn->prepare("INSERT INTO `transactioncustomer` (`invoicenumber`,`date`, `time`, `customername`, `accountid`, `previousbalance`, `amountpaid`, `bill`,`totalbill`, `remainingbalance`, `remarks`) VALUES (:invoicenumber, :date, :time, :customername, :accountid, :previousbalance, :amountpaid, :bill, :totalbill, :remainingbalance, :remarks)");
+            if ($stmt->execute([
+                'invoicenumber' => $invoicenumber,
+                'date' => $date,
+                'time' => $time,
+                'customername' => $customername,
+                'accountid' => $accountid,
+                'previousbalance' => $remainingbalance,
+                'amountpaid' => $amountpaid,
+                'bill' => $total,
+                'totalbill' => $grandtotal,
+                'remainingbalance' => ((int)$grandtotal - (int)$amountpaid),
+                'remarks' => ''
+            ])) {
+                printPage($invoicenumber);
+            } else {
+                echo json_encode(false);
+            }
         }
-    }
-}
+    
+}}
 function generateexisting($edit = false)
 {
     global $conn;
@@ -293,6 +296,8 @@ function generateexisting($edit = false)
             </script>";
     }
     for ($i = 0; $i < $length; $i++) {
+        if($_POST["itemid"][$i]!='')
+        {
         $stmt = $conn->prepare("INSERT INTO `items` (`invoicenumber`, `itemid`, `description`,`quantity`,`rate`,`amount`) VALUES (:invoicenumber, :itemid, :description, :quantity, :rate, :amount)");
         if ($stmt->execute([
             'invoicenumber' => $invoicenumber,
@@ -302,30 +307,31 @@ function generateexisting($edit = false)
             'rate' => $_POST["rate"][$i],
             'amount' => $_POST["amount"][$i],
         ])) {
-            if ($i == ($length - 1)) {
-                $stmt = $conn->prepare("INSERT INTO `transactioncustomer` (`invoicenumber`,`date`, `time`, `customername`, `accountid`, `previousbalance`, `amountpaid`, `bill`,`totalbill`, `remainingbalance`, `remarks`) VALUES (:invoicenumber, :date, :time, :customername, :accountid, :previousbalance, :amountpaid, :bill, :totalbill, :remainingbalance, :remarks)");
-                if ($stmt->execute([
-                    'invoicenumber' => $invoicenumber,
-                    'date' => $date,
-                    'time' => $time,
-                    'customername' => $customername,
-                    'accountid' => $accountid,
-                    'previousbalance' => $previousbalance,
-                    'amountpaid' => $amountpaid,
-                    'bill' => $total,
-                    'totalbill' => $grandtotal,
-                    'remainingbalance' => ((int)$grandtotal - (int)$amountpaid),
-                    'remarks' => ''
-                ])) {
-                    printPage($invoicenumber);
-                } else {
-                    echo json_encode(false);
-                }
-            }
+           
         } else {
             $message = "There was an error inserting data into items table";
             echo "<script type='text/javascript'>alert('$message');
                 </script>";
+        }}
+        if ($i == ($length - 1)) {
+            $stmt = $conn->prepare("INSERT INTO `transactioncustomer` (`invoicenumber`,`date`, `time`, `customername`, `accountid`, `previousbalance`, `amountpaid`, `bill`,`totalbill`, `remainingbalance`, `remarks`) VALUES (:invoicenumber, :date, :time, :customername, :accountid, :previousbalance, :amountpaid, :bill, :totalbill, :remainingbalance, :remarks)");
+            if ($stmt->execute([
+                'invoicenumber' => $invoicenumber,
+                'date' => $date,
+                'time' => $time,
+                'customername' => $customername,
+                'accountid' => $accountid,
+                'previousbalance' => $previousbalance,
+                'amountpaid' => $amountpaid,
+                'bill' => $total,
+                'totalbill' => $grandtotal,
+                'remainingbalance' => ((int)$grandtotal - (int)$amountpaid),
+                'remarks' => ''
+            ])) {
+                printPage($invoicenumber);
+            } else {
+                echo json_encode(false);
+            }
         }
     }
     // $stmt = $conn->prepare("UPDATE `transactioncustomer` SET `remainingbalance` = :remainingbalance WHERE `transactioncustomer`.`accountid` = :accountid");

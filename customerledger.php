@@ -4,6 +4,7 @@
 <html lang="en">
 
 <head>
+
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -14,7 +15,17 @@
     <link rel="stylesheet" href="styles/global.css">
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type='text/css'>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.9.0/themes/smoothness/jquery-ui.css" />
+<style>
+    ul.pagination {
+    white-space: nowrap;
+    overflow-x: auto;
+}
 
+ul.pagination li {
+    display: inline-block;
+    float: none;
+}
+</style>
     <title>Customer Ledger</title>
 </head>
 
@@ -88,8 +99,9 @@
 
 
                             echo '</tbody></table>';
-                            echo    '<nav aria-label="...">';
-                            echo '<ul class="pagination justify-content-center">';
+
+                            echo    '<nav  aria-label="...">';
+                            echo '<ul class="pagination ">';
 
 
 
@@ -148,7 +160,7 @@
 
                         echo '</tbody></table>';
                         echo    '<nav aria-label="...">';
-                        echo '<ul class="pagination  justify-content-center">';
+                        echo '<ul class="pagination  ">';
 
 
 

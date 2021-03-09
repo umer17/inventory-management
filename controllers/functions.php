@@ -9,7 +9,7 @@ global $conn;
 $conn = null;
 
 try {
-    $conn = new PDO("mysql:host=$servername;port=3308;dbname=$dbname", $username, $password);
+    $conn = new PDO("mysql:host=$servername;port=3306;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     // getitems('8owJewPmpbWLLCBe');
 } catch (PDOException $e) {
@@ -18,7 +18,7 @@ try {
 function getbills()
 {
     global $conn;
-    $stmt = $conn->prepare("SELECT * FROM bills   order by `date` DESC, `time` DESC");
+    $stmt = $conn->prepare("SELECT * FROM bills   order by STR_TO_DATE(`date`,'%m/%d/%Y')  DESC, `time` DESC");
     $bills = array();
     if ($stmt->execute()) {
         // set the resulting array to associative
@@ -101,7 +101,7 @@ function getcustomernames()
 function getvendortransactions()
 {
     global $conn;
-    $stmt = $conn->prepare("SELECT * FROM transactions   order by `date` DESC, `time` DESC");
+    $stmt = $conn->prepare("SELECT * FROM transactions   order by STR_TO_DATE(`date`,'%m/%d/%Y') DESC, `time` DESC");
     $transactions = array();
     if ($stmt->execute()) {
         // set the resulting array to associative
@@ -114,7 +114,7 @@ function getvendortransactions()
 function getcustomertransactions()
 {
     global $conn;
-    $stmt = $conn->prepare("SELECT * FROM transactioncustomer   order by `date` DESC, `time` DESC");
+    $stmt = $conn->prepare("SELECT * FROM transactioncustomer   order by STR_TO_DATE(`date`,'%m/%d/%Y') DESC, `time` DESC");
     $transactions = array();
     if ($stmt->execute()) {
         // set the resulting array to associative

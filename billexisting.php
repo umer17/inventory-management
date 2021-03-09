@@ -183,7 +183,7 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == '1') { ?>
                     <td><input name="itemid[]" onkeyup="searchDescription(this)" class="itemids" required type="text"></td>
                     <td><input name="description[]" onkeyup="searchId(this)" class="description" required type="text"></td>
                     <td><input name="quantity[]" onkeyup="updateAmount(this)" required type="number"></td>
-                    <td><input name="rate[]" onkeyup="updateFromRate(this)" required type="number">
+                    <td><input name="rate[]" step='any' onkeyup="updateFromRate(this)" required type="number">
                       <p class="text-center"></p>
                     </td>
                     <td><input type="hidden" name="amount[]" required type="number">
@@ -195,7 +195,7 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == '1') { ?>
                     <td><input name="itemid[]" onkeyup="searchDescription(this)" class="itemids" type="text"></td>
                     <td><input name="description[]" onkeyup="searchId(this)" class="description" type="text"></td>
                     <td><input name="quantity[]" onkeyup="updateAmount(this)" type="number"></td>
-                    <td><input name="rate[]" onkeyup="updateFromRate(this)" type="number">
+                    <td><input name="rate[]" step='any' onkeyup="updateFromRate(this)" type="number">
                       <p class="text-center"></p>
                     </td>
                     <td><input type="hidden" name="amount[]" type="number">
@@ -207,7 +207,7 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == '1') { ?>
                     <td><input name="itemid[]" onkeyup="searchDescription(this)" class="itemids" type="text"></td>
                     <td><input name="description[]" onkeyup="searchId(this)" class="description" type="text"></td>
                     <td><input name="quantity[]" onkeyup="updateAmount(this)" type="number"></td>
-                    <td><input name="rate[]" onkeyup="updateFromRate(this)" type="number">
+                    <td><input name="rate[]" step='any' onkeyup="updateFromRate(this)" type="number">
                       <p class="text-center"></p>
                     </td>
                     <td><input type="hidden" name="amount[]" type="number">
@@ -271,7 +271,7 @@ window.location.href = 'login.php';
 
     function addRow() {
       var tableRef = document.getElementById('bill-table').getElementsByTagName('tbody')[0];
-      $("#bill-table").find('tbody').append("<tr><td>" + (tableRef.rows.length + 1) + "</td><td><input class=\"itemids\" name=\"itemid[]\" onkeyup=\"searchDescription(this)\" type=\"text\"></td><td><input  onkeyup=\"searchId(this)\" name=\"description[]\" class=\"description\" type=\"text\"></td><td><input name=\"quantity[]\" onkeyup=\"updateAmount(this)\" type=\"number\"></td> <td><input onkeyup='updateFromRate(this)' name=\"rate[]\" type=\"number\"><p class=\"text-center\"></p></td><td><input type=\"hidden\" name=\"amount[]\" type=\"number\"><p class=\"text-center\"></p></td></tr>");
+      $("#bill-table").find('tbody').append("<tr><td>" + (tableRef.rows.length + 1) + "</td><td><input class=\"itemids\" name=\"itemid[]\" onkeyup=\"searchDescription(this)\" type=\"text\"></td><td><input  onkeyup=\"searchId(this)\" name=\"description[]\" class=\"description\" type=\"text\"></td><td><input name=\"quantity[]\" onkeyup=\"updateAmount(this)\" type=\"number\"></td> <td><input onkeyup='updateFromRate(this)' step='any' name=\"rate[]\" type=\"number\"><p class=\"text-center\"></p></td><td><input type=\"hidden\" name=\"amount[]\" type=\"number\"><p class=\"text-center\"></p></td></tr>");
     }
 
     function updateFromRate(element) {
