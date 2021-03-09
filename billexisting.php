@@ -41,7 +41,7 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == '1') { ?>
               </div>
               <div class="form-group">
                 <label for="quantity1">Quantity:</label>
-                <input name="quantity" class="form-control" id="quantity1" placeholder="Quantity" required type="number">
+                <input name="quantity" class="form-control" id="quantity1" placeholder="Quantity"  step='any'  required type="number">
               </div>
               <div class="form-group">
                 <label for="rate1">Rate:</label>
@@ -79,7 +79,7 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == '1') { ?>
       function generateID(element) {
         let values = element.value.split(' ');
         let finalString = "";
-        console.log(values);
+        // console.log(values);
         // if(Array.isArray(values) && values.length && values[0]!="") {
         values.forEach((item) => {
           finalString += item.substring(0, 1).toUpperCase();
@@ -182,7 +182,7 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == '1') { ?>
                     <td>1</td>
                     <td><input name="itemid[]" onkeyup="searchDescription(this)" class="itemids" required type="text"></td>
                     <td><input name="description[]" onkeyup="searchId(this)" class="description" required type="text"></td>
-                    <td><input name="quantity[]" onkeyup="updateAmount(this)" required type="number"></td>
+                    <td><input name="quantity[]" onkeyup="updateAmount(this)" required  step='any' type="number"></td>
                     <td><input name="rate[]" step='any' onkeyup="updateFromRate(this)" required type="number">
                       <p class="text-center"></p>
                     </td>
@@ -194,7 +194,7 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == '1') { ?>
                     <td>2</td>
                     <td><input name="itemid[]" onkeyup="searchDescription(this)" class="itemids" type="text"></td>
                     <td><input name="description[]" onkeyup="searchId(this)" class="description" type="text"></td>
-                    <td><input name="quantity[]" onkeyup="updateAmount(this)" type="number"></td>
+                    <td><input name="quantity[]" onkeyup="updateAmount(this)" step='any'  type="number"></td>
                     <td><input name="rate[]" step='any' onkeyup="updateFromRate(this)" type="number">
                       <p class="text-center"></p>
                     </td>
@@ -206,7 +206,7 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == '1') { ?>
                     <td>3</td>
                     <td><input name="itemid[]" onkeyup="searchDescription(this)" class="itemids" type="text"></td>
                     <td><input name="description[]" onkeyup="searchId(this)" class="description" type="text"></td>
-                    <td><input name="quantity[]" onkeyup="updateAmount(this)" type="number"></td>
+                    <td><input name="quantity[]" onkeyup="updateAmount(this)" step='any'  type="number"></td>
                     <td><input name="rate[]" step='any' onkeyup="updateFromRate(this)" type="number">
                       <p class="text-center"></p>
                     </td>
@@ -271,15 +271,15 @@ window.location.href = 'login.php';
 
     function addRow() {
       var tableRef = document.getElementById('bill-table').getElementsByTagName('tbody')[0];
-      $("#bill-table").find('tbody').append("<tr><td>" + (tableRef.rows.length + 1) + "</td><td><input class=\"itemids\" name=\"itemid[]\" onkeyup=\"searchDescription(this)\" type=\"text\"></td><td><input  onkeyup=\"searchId(this)\" name=\"description[]\" class=\"description\" type=\"text\"></td><td><input name=\"quantity[]\" onkeyup=\"updateAmount(this)\" type=\"number\"></td> <td><input onkeyup='updateFromRate(this)' step='any' name=\"rate[]\" type=\"number\"><p class=\"text-center\"></p></td><td><input type=\"hidden\" name=\"amount[]\" type=\"number\"><p class=\"text-center\"></p></td></tr>");
+      $("#bill-table").find('tbody').append("<tr><td>" + (tableRef.rows.length + 1) + "</td><td><input class=\"itemids\" name=\"itemid[]\" onkeyup=\"searchDescription(this)\" type=\"text\"></td><td><input  onkeyup=\"searchId(this)\" name=\"description[]\" class=\"description\" type=\"text\"></td><td><input name=\"quantity[]\"   step='any' onkeyup=\"updateAmount(this)\" type=\"number\"></td> <td><input onkeyup='updateFromRate(this)' step='any' name=\"rate[]\" type=\"number\"><p class=\"text-center\"></p></td><td><input type=\"hidden\" name=\"amount[]\" type=\"number\"><p class=\"text-center\"></p></td></tr>");
     }
 
     function updateFromRate(element) {
       rate = element.value;
       quantity = element.parentElement.previousElementSibling.childNodes[0].value;
       amount = rate * quantity;
-      element.parentElement.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = amount;
-      element.parentElement.nextElementSibling.childNodes[0].value = amount;
+      element.parentElement.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = amount.toFixed(2);
+      element.parentElement.nextElementSibling.childNodes[0].value = amount.toFixed(2);
       calculateTotal();
     }
 
@@ -360,7 +360,7 @@ window.location.href = 'login.php';
       if (descriptionIndex != undefined) {
         element.parentElement.nextElementSibling.childNodes[0].value = data[1][descriptionIndex];
         element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.childNodes[0].value = data[3][descriptionIndex];
-        console.log(element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.childNodes);
+        // console.log(element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.childNodes);
         // element.parentElement.nextElementSibling.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = data[3][descriptionIndex];
       } else {
         element.parentElement.nextElementSibling.childNodes[0].value = "";
@@ -418,8 +418,8 @@ window.location.href = 'login.php';
       let amount = rate * element.value;
       if (amount != 0) {
         // console.log( element.parentElement.nextElementSibling.nextElementSibling.childNodes()[0].value=amount);
-        element.parentElement.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = amount;
-        element.parentElement.nextElementSibling.nextElementSibling.childNodes[0].value = amount
+        element.parentElement.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = amount.toFixed(2);
+        element.parentElement.nextElementSibling.nextElementSibling.childNodes[0].value = amount.toFixed(2);
         calculateTotal();
       } else {
         element.parentElement.nextElementSibling.nextElementSibling.getElementsByClassName("text-center")[0].innerHTML = "";
@@ -436,10 +436,10 @@ window.location.href = 'login.php';
       for (var i = 0; i < values.length; i++) {
         total += Number(values[i].value);
       }
-      document.getElementById("total").getElementsByTagName("p")[0].innerHTML = "Total: " + Number(total);
-      document.getElementsByName("total")[0].value = total;
-      document.getElementById("grandtotal").getElementsByTagName("p")[0].innerHTML = "Grand Total: " + ((Number(total) + Number(document.getElementById("previousbalance").value)) - (Number(document.getElementById("discount").value)));
-      document.getElementsByName("grandtotal")[0].value = ((Number(total) + Number(document.getElementById("previousbalance").value)) - (Number(document.getElementById("discount").value)));
+      document.getElementById("total").getElementsByTagName("p")[0].innerHTML = "Total: " + Number(total).toFixed(2);
+      document.getElementsByName("total")[0].value = total.toFixed(2);
+      document.getElementById("grandtotal").getElementsByTagName("p")[0].innerHTML = "Grand Total: " + ((Number(total).toFixed(2) + Number(document.getElementById("previousbalance").value)) - (Number(document.getElementById("discount").value)));
+      document.getElementsByName("grandtotal")[0].value = ((Number(total).toFixed(2) + Number(document.getElementById("previousbalance").value)) - (Number(document.getElementById("discount").value)));
     }
 
     function setPreviousBalance() {
@@ -496,7 +496,7 @@ window.location.href = 'login.php';
             cache: false,
             success: function(result) {
               data = result
-              console.log("success")
+              // console.log("success")
             }
           });
         },
@@ -518,7 +518,7 @@ window.location.href = 'login.php';
         dataType: 'json',
         cache: false,
         success: function(result) {
-          console.log(result[0]);
+          // console.log(result[0]);
           data2 = result;
           $(".searchbox").autocomplete({
             source: data2[0],
